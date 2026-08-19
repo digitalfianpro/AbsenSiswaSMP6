@@ -671,6 +671,7 @@
                     renderAllRecords();
                 }
 
+                // KIRIM WA BACKGROUND SECARA OTOMATIS
                 sendWhatsAppDirectly(student, record);
 
                 showToast(isLate ? "TERLAMBAT!" : "Hadir Berhasil!", `${student.nama} - Kls ${student.kelas}`, isLate ? "warning" : "success");
@@ -754,7 +755,7 @@
                 return;
             }
             if (!fonnteToken) {
-                showToast("WA Tidak Terkirim", "Token Fonnte belum diisi di WA Center!", "warning");
+                showToast("WA Tidak Terkirim", "Token Fonnte belum diatur/diisi di WA Center!", "warning");
                 return;
             }
 
@@ -840,7 +841,7 @@
 
         function testFonnteConnection() {
             if (!fonnteToken) {
-                showToast("Gagal", "Silakan simpan Token Fonnte terlebih dahulu.", "error");
+                showToast("Gagal", "Silakan masukkan Token Fonnte terlebih dahulu.", "error");
                 return;
             }
             if (window.studentsData.length === 0) {
@@ -1506,74 +1507,127 @@
             setTimeout(() => { toast.classList.remove('show'); }, 2200);
         }
 
+        // --- MULAI PENYAMBUNGAN KODE YANG TERPOTONG ---
+
+        // Fungsi Simpan Token Fonnte
         function saveFonnteToken() {
             const tokenInput = document.getElementById("fonnte-token-input").value.trim();
             if (tokenInput) {
                 fonnteToken = tokenInput;
                 localStorage.setItem("smp6_fonnte_token", fonnteToken);
-                showToast("Tersimpan", "Token Fonnte berhasil disimpan.", "success");
+                showToast("Tersimpan", "Token Fonnte berhasil disimpan dan diaktifkan.", "success");
                 updateFonnteStatusUI();
             } else {
                 showToast("Gagal", "Token tidak boleh kosong.", "error");
             }
         }
 
+        // Update UI untuk mengindikasikan status Token Fonnte
         function updateFonnteStatusUI() {
             const statusEl = document.getElementById("fonnte-status");
-            const inputEl = document.getElementById("fonnte-token-input");
-            if (statusEl && inputEl) {
+            if(statusEl) {
                 if (fonnteToken) {
-                    inputEl.value = fonnteToken;
-                    statusEl.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span> <span class="text-emerald-700">Token Terkonfigurasi & Aktif</span>`;
+                    statusEl.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-500 text-sm"></i> <span class="text-emerald-700">Token Terhubung & Aktif</span>';
+                    document.getElementById("fonnte-token-input").value = fonnteToken;
                 } else {
-                    statusEl.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span> <span class="text-rose-700">Token Belum Dikonfigurasi</span>`;
+                    statusEl.innerHTML = '<i class="fa-solid fa-circle-xmark text-rose-500 text-sm"></i> <span class="text-rose-700">Token Belum Diatur</span>';
                 }
             }
         }
 
-        function simulateScan() {
-            if (window.studentsData.length === 0) return;
-            processScanResult(window.studentsData[Math.floor(Math.random() * window.studentsData.length)].nisn);
-        }
-        
+        // FITUR SINKRONISASI API FONNTE SUPER CEPAT (Menangani Ketikan Secara Real-Time)
+        document.getElementById("fonnte-token-input").addEventListener("input", function(e) {
+            const val = e.target.value.trim();
+            fonnteToken = val;
+            localStorage.setItem("smp6_fonnte_token", fonnteToken);
+            updateFonnteStatusUI();
+        });
+
+        // Tab Navigation & UI Toggles
         function switchTab(tabId) {
             const tabs = ['scan', 'live', 'students', 'records', 'generator', 'whatsapp'];
+            
+            // Sembunyikan semua konten dan hapus styling aktif
             tabs.forEach(t => {
-                const section = document.getElementById(`view-${t}`);
-                if (section) section.classList.add('hidden');
-                const btn = document.getElementById(`tab-${t}`);
-                if (btn) btn.classList.remove('sidebar-active');
+                const viewEl = document.getElementById('view-' + t);
+                const tabEl = document.getElementById('tab-' + t);
+                if(viewEl) viewEl.classList.add('hidden');
+                if(tabEl) {
+                    tabEl.classList.remove('sidebar-active', 'text-white');
+                    tabEl.classList.add('text-slate-400');
+                }
             });
-            document.getElementById(`view-${tabId}`).classList.remove('hidden');
-            document.getElementById(`tab-${tabId}`).classList.add('sidebar-active');
-
-            if (tabId === 'students') renderStudentTable();
-            if (tabId === 'records') window.renderAllRecords();
-            if (tabId === 'generator') generateCardsPreview();
-            if (tabId === 'live') window.renderLiveTable();
-
-            if (window.innerWidth < 1024) toggleSidebar();
+            
+            // Tampilkan konten yg di-klik
+            document.getElementById('view-' + tabId).classList.remove('hidden');
+            document.getElementById('tab-' + tabId).classList.remove('text-slate-400');
+            document.getElementById('tab-' + tabId).classList.add('sidebar-active', 'text-white');
+            
+            // Update Title Header
+            const titles = {
+                'scan': 'Pemindai QR',
+                'live': 'Live Absensi',
+                'students': 'Data Siswa',
+                'records': 'Rekapan Absen',
+                'generator': 'Cetak Kartu QR',
+                'whatsapp': 'WA Center'
+            };
+            document.getElementById('page-title').innerText = titles[tabId];
+            
+            // Tutup sidebar jika di layar kecil
+            if(window.innerWidth < 1024) {
+                const sidebar = document.getElementById("sidebar");
+                if (!sidebar.classList.contains("-translate-x-full")) {
+                    toggleSidebar();
+                }
+            }
+            
+            // Jalankan render spesifik tergantung tab
+            if(tabId === 'live') renderLiveTable();
+            if(tabId === 'students') renderStudentTable();
+            if(tabId === 'records') renderAllRecords();
+            if(tabId === 'generator') generateCardsPreview();
+            if(tabId === 'whatsapp') updateFonnteStatusUI();
         }
 
-        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('-translate-x-full'); }
+        function toggleSidebar() {
+            const sidebar = document.getElementById("sidebar");
+            if (sidebar.classList.contains("-translate-x-full")) {
+                sidebar.classList.remove("-translate-x-full");
+            } else {
+                sidebar.classList.add("-translate-x-full");
+            }
+        }
+
         function closeWelcomeScreen() {
-            const screen = document.getElementById('welcome-screen');
-            screen.classList.add('opacity-0', 'pointer-events-none');
-            setTimeout(() => screen.remove(), 500);
+            document.getElementById("welcome-screen").classList.add("hidden");
         }
 
-        function updateClock() {
-            const now = new Date();
-            const el = document.getElementById("current-datetime");
-            if (el) el.innerText = now.toLocaleDateString("id-ID") + " " + now.toLocaleTimeString("id-ID");
+        function simulateScan() {
+            if (window.studentsData.length > 0) {
+                const randomStudent = window.studentsData[Math.floor(Math.random() * window.studentsData.length)];
+                processScanResult(randomStudent.nisn);
+            } else {
+                showToast("Data Kosong", "Belum ada data siswa untuk disimulasikan.", "error");
+            }
         }
 
-        window.onload = function() { 
-            setInterval(updateClock, 1000);
-            updateClock();
-            window.renderLiveTable(); 
+        // Live Clock Jam Samping
+        setInterval(() => {
+            const dtEl = document.getElementById("current-datetime");
+            if (dtEl) {
+                const now = new Date();
+                dtEl.innerText = now.toLocaleDateString('id-ID') + ' ' + now.toLocaleTimeString('id-ID');
+            }
+        }, 1000);
+
+        // INIT LOAD
+        window.onload = function() {
             updateFonnteStatusUI();
+            renderLiveTable();
+            renderStudentTable();
         };
+
     </script>
 </body>
 </html>
