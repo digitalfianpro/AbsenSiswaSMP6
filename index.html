@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- QR Code Scanner Library -->
     <script src="https://unpkg.com/html5-qrcode"></script>
-    <!-- Excel & Zip Libraries (Kept for compatibility, though full Excel logic requires complex mapping) -->
+    <!-- Excel & Zip Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <!-- QR Code Generator Library -->
@@ -95,14 +95,6 @@
                 <i class="fa-solid fa-rocket mr-2"></i> Mulai Aplikasi
             </button>
         </div>
-    </div>
-
-    <div id="loading-overlay" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex flex-col items-center justify-center hidden z-[9998]">
-        <div class="relative w-14 h-14">
-            <div class="absolute inset-0 rounded-full border-t-4 border-blue-500 animate-spin"></div>
-            <div class="absolute inset-2 rounded-full border-r-4 border-cyan-400 animate-spin" style="animation-direction: reverse; animation-duration: 1.2s;"></div>
-        </div>
-        <p class="text-slate-200 font-medium mt-5 tracking-wide text-sm" id="loading-text">Memproses Data...</p>
     </div>
 
     <div class="flex h-screen w-full">
@@ -243,8 +235,9 @@
                             </div>
                             <div class="flex flex-wrap gap-2 w-full md:w-auto">
                                 <button onclick="openAddStudentModal()" class="px-4 py-2 bg-blue-600 text-white rounded-xl text-xs font-semibold hover:bg-blue-700 transition flex items-center gap-2 shadow-sm"><i class="fa-solid fa-plus"></i> Tambah Siswa</button>
+                                <button onclick="downloadExcelTemplate()" class="px-4 py-2 bg-amber-500 text-white rounded-xl text-xs font-semibold hover:bg-amber-600 transition flex items-center gap-2 shadow-sm"><i class="fa-solid fa-file-excel"></i> Template Import</button>
                                 <label class="px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-semibold hover:bg-emerald-700 transition cursor-pointer flex items-center gap-2 shadow-sm">
-                                    <i class="fa-solid fa-file-excel"></i> Import Excel
+                                    <i class="fa-solid fa-upload"></i> Import Excel
                                     <input type="file" id="excel-file-input" accept=".xlsx, .xls" class="hidden" onchange="importStudentsFromExcel(event)">
                                 </label>
                                 <button onclick="exportStudentsToExcel()" class="px-4 py-2 bg-slate-700 text-white rounded-xl text-xs font-semibold hover:bg-slate-800 transition flex items-center gap-2 shadow-sm"><i class="fa-solid fa-download"></i> Export Excel</button>
@@ -403,8 +396,8 @@
                         </div>
                         <div class="p-6 space-y-6">
                             <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-xl text-xs text-emerald-800 space-y-1">
-                                <p class="font-bold"><i class="fa-brands fa-whatsapp text-emerald-600 mr-1.5"></i> Integrasi Otomatis Fonnte Gateway dengan Anti-Spam</p>
-                                <p>Setiap siswa melakukan absensi, sistem akan memproses pengiriman WA di background. Untuk mencegah spam, setiap <strong>15 pesan yang terkirim</strong>, sistem akan melakukan <strong>jeda otomatis selama 5 menit</strong>. Sistem juga dirancang untuk mencegah pengiriman pesan ganda untuk absen yang sama.</p>
+                                <p class="font-bold"><i class="fa-brands fa-whatsapp text-emerald-600 mr-1.5"></i> Integrasi Otomatis Fonnte Gateway dengan Anti-Spam & Template Inklusif</p>
+                                <p>Setiap siswa melakukan absensi, sistem memilih 1 dari <strong>20 format pesan inklusif, ramah & sopan secara acak</strong> (sesuai untuk seluruh orang tua siswa dari berbagai latar belakang agama/kepercayaan). Untuk mencegah blokir/spam, setiap <strong>15 pesan terkirim</strong>, sistem beristirahat otomatis <strong>5 menit</strong>.</p>
                             </div>
                             
                             <!-- Konfigurasi Token Fonnte -->
@@ -423,7 +416,7 @@
                                 <p class="text-[11px] text-slate-500 mt-2">Dapatkan API Token di <a href="https://md.fonnte.com/new/device.php" target="_blank" class="text-blue-600 hover:underline">dashboard device Fonnte Anda</a>.</p>
                                 
                                 <div id="fonnte-status" class="mt-4 flex items-center gap-2 text-xs font-medium text-emerald-600">
-                                    <i class="fa-solid fa-check-circle"></i> Token API telah diatur.
+                                    <i class="fa-solid fa-check-circle"></i> Token API siap digunakan.
                                 </div>
 
                                 <div class="mt-5 pt-4 border-t border-slate-100 flex flex-wrap items-center gap-3">
@@ -448,7 +441,7 @@
         </div>
     </div>
 
-    <!-- MODAL: TAMBAH SISWA -->
+    <!-- MODAL: TAMBAH/EDIT SISWA -->
     <div id="student-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] flex items-center justify-center hidden p-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 border border-slate-100 animate-slide-up">
             <div class="flex justify-between items-center mb-4 border-b border-slate-100 pb-3">
@@ -500,33 +493,24 @@
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         
-        let firebaseConfig;
-        let appId = 'smp-6-absen';
-        
-        if (typeof __firebase_config !== 'undefined') {
-            firebaseConfig = JSON.parse(__firebase_config);
-            if (typeof __app_id !== 'undefined') appId = __app_id;
-        } else {
-            firebaseConfig = { 
-                apiKey: "AIzaSyAnJEEe_qvIWOdhIk1jXbTVT4SSuNWlHNU", 
-                authDomain: "absen-siswa-smp-6.firebaseapp.com", 
-                projectId: "absen-siswa-smp-6", 
-                storageBucket: "absen-siswa-smp-6.firebasestorage.app", 
-                messagingSenderId: "722869165470", 
-                appId: "1:722869165470:web:ae0dd745747a46c2748a8f", 
-                measurementId: "G-2D4KFC2XTZ" 
-            };
-        }
+        let firebaseConfig = { 
+            apiKey: "AIzaSyAnJEEe_qvIWOdhIk1jXbTVT4SSuNWlHNU", 
+            authDomain: "absen-siswa-smp-6.firebaseapp.com", 
+            projectId: "absen-siswa-smp-6"
+        };
+        const appId = 'smp-6-absen';
 
-        const app = initializeApp(firebaseConfig);
-        window.firebaseDB = getFirestore(app);
-        const auth = getAuth(app);
+        let app, auth;
+        try {
+            app = initializeApp(firebaseConfig);
+            window.firebaseDB = getFirestore(app);
+            auth = getAuth(app);
+        } catch(e) {}
         
         let isLocalMode = false;
         function setLocalMode() {
             if (isLocalMode) return;
             isLocalMode = true;
-            console.warn("Gagal terhubung Firebase. Beralih ke Local Storage Mode.");
             
             const cloudStatusText = document.getElementById("cloud-status-text");
             const cloudStatusEl = document.getElementById("cloud-status");
@@ -538,79 +522,40 @@
         }
 
         window.addRecordToCloud = async (record) => {
-            if (!auth.currentUser || isLocalMode) return;
-            try {
-                await addDoc(collection(window.firebaseDB, 'artifacts', appId, 'public', 'data', 'attendance'), record);
-            } catch (e) {
-                if (e.code === 'permission-denied') setLocalMode();
-            }
+            if (!auth || !auth.currentUser || isLocalMode) return;
+            try { await addDoc(collection(window.firebaseDB, 'artifacts', appId, 'public', 'data', 'attendance'), record); } catch (e) { setLocalMode(); }
         };
 
         window.addStudentToCloud = async (student) => {
-            if (!auth.currentUser || isLocalMode) return;
-            try {
-                await addDoc(collection(window.firebaseDB, 'artifacts', appId, 'public', 'data', 'students'), student);
-            } catch (e) {
-                if (e.code === 'permission-denied') setLocalMode();
-            }
+            if (!auth || !auth.currentUser || isLocalMode) return;
+            try { await addDoc(collection(window.firebaseDB, 'artifacts', appId, 'public', 'data', 'students'), student); } catch (e) { setLocalMode(); }
         };
         
-        signInAnonymously(auth).then(() => { 
-            const cloudStatusText = document.getElementById("cloud-status-text");
-            const cloudStatusEl = document.getElementById("cloud-status");
-            
-            if (cloudStatusText && cloudStatusEl) {
-                cloudStatusText.innerText = "Menghubungkan Database..."; 
-                cloudStatusEl.className = "text-xs font-medium bg-amber-50 text-amber-700 px-3 py-1.5 rounded-full flex items-center gap-2 border border-amber-200 shadow-sm transition-all";
-                cloudStatusEl.querySelector('i').className = "fa-solid fa-cloud-check text-amber-600";
-            }
-            
-            try {
-                const qAttendance = query(collection(window.firebaseDB, 'artifacts', appId, 'public', 'data', 'attendance'));
-                onSnapshot(qAttendance, (snapshot) => {
-                    if (cloudStatusText && !isLocalMode) {
-                        cloudStatusText.innerText = "Firebase Terhubung"; 
-                        cloudStatusEl.className = "text-xs font-medium bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-full flex items-center gap-2 border border-emerald-200 shadow-sm transition-all";
-                        cloudStatusEl.querySelector('i').className = "fa-solid fa-cloud-check text-emerald-600";
-                    }
-
-                    const cloudRecords = [];
-                    snapshot.forEach(doc => cloudRecords.push(doc.data()));
-                    if (cloudRecords.length > 0) {
-                        const existingMap = new Map();
-                        if(window.attendanceRecords) window.attendanceRecords.forEach(r => existingMap.set(r.id, r));
-                        cloudRecords.forEach(r => existingMap.set(r.id, r));
-                        window.attendanceRecords = Array.from(existingMap.values()).sort((a,b) => b.timestamp - a.timestamp);
-                        localStorage.setItem("smp6_attendance", JSON.stringify(window.attendanceRecords));
-                        if (typeof window.renderLiveTable === 'function') window.renderLiveTable();
-                        if (typeof window.renderAllRecords === 'function') window.renderAllRecords();
-                    }
-                }, (error) => {
-                    if (error.code === 'permission-denied') setLocalMode();
-                });
-
-                const qStudents = query(collection(window.firebaseDB, 'artifacts', appId, 'public', 'data', 'students'));
-                onSnapshot(qStudents, (snapshot) => {
-                    const cloudStudents = [];
-                    snapshot.forEach(doc => cloudStudents.push(doc.data()));
-                    if (cloudStudents.length > 0) {
-                        const existingMap = new Map();
-                        if(window.studentsList) window.studentsList.forEach(s => existingMap.set(s.nisn, s));
-                        cloudStudents.forEach(s => existingMap.set(s.nisn, s));
-                        window.studentsList = Array.from(existingMap.values());
-                        localStorage.setItem("smp6_students", JSON.stringify(window.studentsList));
-                        if (typeof window.renderStudentTable === 'function') window.renderStudentTable();
-                        if (typeof window.generateCardsPreview === 'function') window.generateCardsPreview();
-                    }
-                }, (error) => {
-                    if (error.code === 'permission-denied') setLocalMode();
-                });
-            } catch(e) {
-                console.warn("Error listeners", e);
-            }
-        }).catch((e) => {
+        if(auth) {
+            signInAnonymously(auth).then(() => { 
+                const cloudStatusText = document.getElementById("cloud-status-text");
+                const cloudStatusEl = document.getElementById("cloud-status");
+                
+                if (cloudStatusText && cloudStatusEl) {
+                    cloudStatusText.innerText = "Menghubungkan Database..."; 
+                    cloudStatusEl.className = "text-xs font-medium bg-amber-50 text-amber-700 px-3 py-1.5 rounded-full flex items-center gap-2 border border-amber-200 shadow-sm transition-all";
+                    cloudStatusEl.querySelector('i').className = "fa-solid fa-cloud-check text-amber-600";
+                }
+                
+                try {
+                    const qAttendance = query(collection(window.firebaseDB, 'artifacts', appId, 'public', 'data', 'attendance'));
+                    onSnapshot(qAttendance, (snapshot) => {
+                        if (cloudStatusText && !isLocalMode) {
+                            cloudStatusText.innerText = "Firebase Terhubung"; 
+                            cloudStatusEl.className = "text-xs font-medium bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-full flex items-center gap-2 border border-emerald-200 shadow-sm transition-all";
+                            cloudStatusEl.querySelector('i').className = "fa-solid fa-cloud-check text-emerald-600";
+                        }
+                    }, (error) => { setLocalMode(); });
+                } catch(e) { }
+            }).catch((e) => { setLocalMode(); });
+        } else {
             setLocalMode();
-        });
+        }
     </script>
 
     <script>
@@ -618,15 +563,15 @@
         let html5QrcodeScanner = null;
         let activeRecordFilter = 'semua';
         
-        // --- Variabel Pencegah Double Scan (Debounce) ---
+        // --- Variabel Pencegah Double Scan (Debounce Scanner Fisik/Kamera) ---
         let lastScannedNISN = "";
         let lastScanTime = 0;
-        const SCAN_COOLDOWN_MS = 3000; // Jeda 3 detik untuk NISN yang sama (mencegah kamera scan berulang cepat)
+        const SCAN_COOLDOWN_MS = 3000; // Jeda 3 detik untuk NISN yang sama berturut-turut
         
         // --- Variabel Anti Spam WhatsApp ---
         let waQueue = [];
         let isProcessingQueue = false;
-        let messageCountSession = 0; // Menghitung pesan yang terkirim
+        let messageCountSession = 0; // Menghitung pesan terkirim dalam siklus
         let isPaused = false; // Status jeda anti-spam
 
         const initialStudents = [
@@ -639,6 +584,7 @@
         window.studentsList = JSON.parse(localStorage.getItem("smp6_students")) || initialStudents;
         window.attendanceRecords = JSON.parse(localStorage.getItem("smp6_attendance")) || [];
 
+        // Menggunakan API Key default
         let fonnteToken = localStorage.getItem('fonnte_token') || 'JS3EZBCY67FH36ygwLgE';
         if(document.getElementById('fonnte-token-input')) {
             document.getElementById('fonnte-token-input').value = fonnteToken;
@@ -646,8 +592,7 @@
 
         // === FUNGSI INISIALISASI & UI ===
         function initApp() {
-            // Mainkan suara kosong untuk unlock AudioContext pada browser
-            playBeep(true, true); 
+            playBeep(true, true); // Unlock audio context
         }
 
         function closeWelcomeScreen() {
@@ -708,7 +653,6 @@
         setInterval(updateDateTime, 60000);
         updateDateTime();
 
-        // Variabel untuk menyimpan timeout toast agar tidak tumpang tindih berantakan
         let toastTimeout;
         function showToast(title, message, type="success") {
             const toast = document.getElementById('toast');
@@ -728,26 +672,54 @@
                 toast.classList.add('border-amber-500');
             }
 
-            // Hapus class show dan batalkan timeout sebelumnya jika ada
             toast.classList.remove('show');
             clearTimeout(toastTimeout);
-
-            // Force reflow
-            void toast.offsetWidth;
-
+            void toast.offsetWidth; // Force reflow
             toast.classList.add('show');
             toastTimeout = setTimeout(() => { toast.classList.remove('show'); }, 3000);
         }
 
-        // === LOGIKA WHATSAPP ANTI-SPAM ===
-        
-        // Kumpulan variasi pesan agar terlihat manusiawi dan sopan
+        // === LOGIKA WHATSAPP INKLUSIF & NEUTRAL (20 Pilihan Variatif, Sopan, Universal) ===
         const waTemplates = [
-            "Halo Bapak/Ibu Wali Murid, 🙏\n\nKami menginformasikan bahwa ananda *{nama}* (Kelas {kelas}) telah tiba di sekolah dan melakukan presensi pada pukul {waktu}. Terima kasih atas perhatiannya. Semoga ananda belajar dengan baik hari ini. 📚✨\n\n_Salam hangat, SMP Negeri 6_",
-            "Selamat pagi/siang Bapak/Ibu yang kami hormati, 😊\n\nSekadar memberitahukan bahwa *{nama}* (Kelas {kelas}) sudah hadir di sekolah tepat pada {waktu}. Terima kasih dan semoga Bapak/Ibu sehat selalu. 🏫🌟\n\n_Salam hangat, SMP Negeri 6_",
-            "Assalamu'alaikum/Salam sejahtera Bapak/Ibu Wali dari *{nama}*, 🌸\n\nAnanda (Kelas {kelas}) tercatat sudah hadir di sekolah pada {waktu}. Terima kasih telah mempercayakan pendidikan ananda kepada kami. 🙏🎓\n\n_Salam hangat, SMP Negeri 6_",
-            "Yth. Bapak/Ibu Orang Tua Wali,\n\nKami mengabarkan bahwa *{nama}* (Kelas {kelas}) telah sampai di area sekolah dan melakukan scan presensi pada pukul {waktu}. Semoga aktivitas Bapak/Ibu hari ini dilancarkan. 🌺😊\n\n_Salam hangat, SMP Negeri 6_",
-            "Halo Bapak/Ibu, semoga hari ini menyenangkan. ☀️\n\nSistem presensi kami mencatat kehadiran ananda *{nama}* (Kelas {kelas}) pada {waktu}. Terima kasih banyak atas dukungan Bapak/Ibu. 🙏📖\n\n_Salam hangat, SMP Negeri 6_"
+            "Yth. Bapak/Ibu Orang Tua/Wali Murid 🙏\n\nKabar baik, ananda *{nama}* (Kelas {kelas}) telah tiba di SMP Negeri 6 dengan selamat dan melakukan presensi pada pukul *{waktu}*.\n\nTerima kasih atas bimbingan dan perhatian Bapak/Ibu dari rumah. Semoga aktivitas belajar ananda hari ini berjalan lancar. ✨\n\n_Hormat kami,\nTim Presensi SMP Negeri 6_",
+            
+            "Selamat Pagi/Siang Bapak/Ibu Orang Tua dari *{nama}* (Kelas {kelas}) ☀️\n\nAnanda telah hadir di sekolah dan melakukan presensi pada pukul *{waktu}*.\n\nKami siap mendampingi ananda belajar dengan semangat hari ini. Selamat beraktivitas untuk Bapak/Ibu! 📚✨\n\n_Salam hangat,\nSMP Negeri 6_",
+            
+            "Yth. Bapak/Ibu Wali Murid *{nama}*,\n\nDengan hormat, kami menginformasikan bahwa ananda dari Kelas {kelas} telah melakukan pemindaian kehadiran sekolah pada pukul *{waktu}*.\n\nTerima kasih atas kerja sama dan kedisiplinan yang senantiasa diajarkan di rumah. Semoga pembelajaran hari ini memberikan hasil terbaik bagi ananda. 🎓\n\n_Hormat kami,\nPengelola Presensi SMP Negeri 6_",
+            
+            "Salam Sejahtera untuk Bapak/Ibu 🌸\n\nSemoga Bapak/Ibu senantiasa dalam keadaan sehat. Kami beritahukan bahwa ananda *{nama}* (Kelas {kelas}) sudah tiba di sekolah pada pukul *{waktu}*.\n\nHari ini ananda akan menimba ilmu dengan semangat baru. Terima kasih atas kepercayaan dan dukungan Bapak/Ibu. 🍃\n\n_Salam santun,\nSMP Negeri 6_",
+            
+            "Salam Pendidikan, Bapak/Ibu Wali Murid 👋\n\nSistem presensi SMP Negeri 6 mencatat bahwa ananda *{nama}* dari kelas {kelas} telah sampai di lingkungan sekolah pada pukul *{waktu}*.\n\nMari bersama-sama kita dukung agar ananda mendapat ilmu yang bermanfaat dan pengalaman belajar yang menyenangkan hari ini. 😊\n\n_Hormat kami,\nSMP Negeri 6_",
+            
+            "Yth. Orang Tua/Wali Ananda *{nama}* 🌺\n\nAnanda tercatat telah hadir di sekolah tepat pada pukul *{waktu}* (Kelas {kelas}).\n\nTerima kasih Bapak/Ibu telah memastikan ananda berangkat dengan siap dan penuh semangat. Semoga hari ini menjadi hari yang produktif! 💡\n\n_Dewan Guru SMP Negeri 6_",
+            
+            "Kabar Presensi Siswa 📢\n\nYth. Bapak/Ibu Wali Murid dari *{nama}* ({kelas}). Ananda telah sukses memindai kartu presensi pada pukul *{waktu}*.\n\nSemoga ananda dapat mengikuti seluruh proses pembelajaran hari ini dengan fokus dan ceria. Terima kasih atas perhatian Bapak/Ibu. 🙏✨\n\n_Salam hangat,\nSMP Negeri 6_",
+            
+            "Yth. Bapak/Ibu Orang Tua/Wali 😊\n\nDengan senang hati kami sampaikan bahwa ananda *{nama}* (Kelas {kelas}) telah memasuki kawasan sekolah dan melakukan absensi pada pukul *{waktu}*.\n\nSemoga bimbingan dan motivasi dari Bapak/Ibu senantiasa menjadi pendorong suksesnya pendidikan ananda. 📖🏅\n\n_Hormat kami,\nSMP Negeri 6_",
+            
+            "Selamat Pagi/Siang Bapak/Ibu Wali dari *{nama}* ☀️\n\nNotifikasi Kehadiran: Ananda kelas {kelas} telah hadir di sekolah pada pukul *{waktu}*.\n\nKami mengapresiasi kebiasaan disiplin waktu yang ditanamkan Bapak/Ibu dari rumah. Selamat menjalankan aktivitas hari ini! 🌿\n\n_Salam hormat,\nSMP Negeri 6_",
+            
+            "Yth. Bapak/Ibu Orang Tua Ananda *{nama}* 🙏\n\nKami informasikan bahwa ananda (Kelas {kelas}) telah tiba di sekolah dan melakukan pemindaian presensi pada pukul *{waktu}*.\n\nSemoga harinya menyenangkan dan ilmu yang dipelajari bermanfaat bagi masa depan ananda. 🎓✨\n\n_Hormat kami,\nPanitia Absensi SMP Negeri 6_",
+            
+            "Salam Hangat, Yth. Bapak/Ibu ☘️\n\nAnanda *{nama}* (Kelas {kelas}) telah siap mengikuti pembelajaran hari ini setelah melakukan absensi pada pukul *{waktu}*.\n\nTerima kasih atas motivasi dan kasih sayang yang tak terhingga dari rumah. Semoga ananda senantiasa berprestasi. 🌟\n\n_Salam santun,\nSMP Negeri 6_",
+            
+            "Pemberitahuan Kehadiran Ananda 🏫\n\nYth. Bapak/Ibu Wali dari *{nama}* (Kelas {kelas}). Pukul *{waktu}*, ananda telah sampai di sekolah dengan sehat dan ceria.\n\nSemoga proses belajar mengajar hari ini berjalan lancar. Selamat beraktivitas untuk Bapak/Ibu di tempat kerja maupun di rumah! 😊\n\n_Hormat kami,\nSMP Negeri 6_",
+            
+            "Selamat Pagi/Siang Bapak/Ibu Wali Murid ❤️\n\nMelalui pesan ini, kami ingin menyampaikan bahwa ananda *{nama}* (Kelas {kelas}) telah memindai presensi pada pukul *{waktu}*.\n\nKami selalu berupaya memberikan ruang belajar terbaik bagi ananda. Terima kasih atas sinergi luar biasa bersama kami. 📚🌈\n\n_Salam hangat,\nSMP Negeri 6_",
+            
+            "Yth. Bapak/Ibu Orang Tua/Wali Murid 🙏\n\nAnanda *{nama}* (Kelas {kelas}) telah tercatat hadir pada pukul *{waktu}* di SMP Negeri 6.\n\nMari kita bersama mendampingi agar ananda tumbuh menjadi anak yang cerdas, berkarakter mulia, dan membanggakan keluarga. ✨\n\n_Hormat kami,\nSMP Negeri 6_",
+            
+            "Salam Sejahtera Bapak/Ibu Orang Tua Ananda *{nama}* 🍃\n\nAnanda dari Kelas {kelas} telah tiba dan melakukan absensi otomatis pada pukul *{waktu}*.\n\nTerima kasih atas segala dukungan Bapak/Ibu dalam menjaga kedisiplinan dan semangat belajar ananda. 🎓👍\n\n_Salam hormat,\nTim SMP Negeri 6_",
+            
+            "Notifikasi Presensi Sekolah 🏫\n\nYth. Bapak/Ibu, ananda *{nama}* (Kelas {kelas}) tercatat hadir di sekolah pukul *{waktu}*.\n\nKehadiran yang tepat waktu adalah wujud kedisiplinan luar biasa. Terima kasih atas bimbingan Bapak/Ibu dari rumah! 🌟\n\n_Hormat kami,\nSMP Negeri 6_",
+            
+            "Selamat Pagi/Siang Bapak/Ibu Wali Murid 🌸\n\nAnanda *{nama}* ({kelas}) sudah tiba di sekolah dengan selamat pada pukul *{waktu}*.\n\nSemoga hari ini menjadi hari yang dipenuhi pembelajaran berharga dan keceriaan bersama teman-teman serta para guru. 😊\n\n_Salam santun,\nSMP Negeri 6_",
+            
+            "Yth. Bapak/Ibu Wali Murid Ananda *{nama}* 🎓\n\nKabar kehadiran: Ananda (Kelas {kelas}) telah memindai kartu presensi di gerbang sekolah pada pukul *{waktu}*.\n\nTerima kasih atas kerja samanya dalam mendidik putra-putri kita menjadi generasi unggul dan berkarakter. ✨\n\n_Hormat kami,\nSMP Negeri 6_",
+            
+            "Salam Hangat untuk Bapak/Ibu Wali dari *{nama}* ☀️\n\nAnanda kelas {kelas} telah hadir di lingkungan sekolah pada pukul *{waktu}*.\n\nSemoga kesehatan dan kemudahan senantiasa menyertai Bapak/Ibu serta keluarga. Selamat melanjutkan aktivitas! 🌿\n\n_Terima kasih,\nSMP Negeri 6_",
+            
+            "Yth. Bapak/Ibu Orang Tua/Wali yang kami hormati 🙏\n\nSistem presensi mencatat bahwa ananda *{nama}* (Kelas {kelas}) telah hadir tepat waktu pada pukul *{waktu}*.\n\nTerima kasih telah membimbing ananda dengan penuh kasih sayang. Semoga cita-cita ananda tercapai dengan sempurna. 📚\n\n_Hormat kami,\nDewan Guru SMP Negeri 6_"
         ];
 
         function getRandomTemplate() {
@@ -765,41 +737,41 @@
             isProcessingQueue = true;
 
             while (waQueue.length > 0) {
-                if (isPaused) break; // Hentikan proses jika terjeda
+                if (isPaused) break;
 
-                // CEK LIMIT UNTUK JEDA (SETIAP 15 PESAN)
+                // ATURAN: JEDA OTOMATIS SETELAH 15 PESAN
                 if (messageCountSession >= 15) {
                     isPaused = true;
-                    messageCountSession = 0; // Reset hitungan
+                    messageCountSession = 0; 
                     updateWaQueueUI("Jeda Anti-Spam (5 Menit)");
-                    showToast("Sistem Jeda", "Mencapai batas 15 pesan. Jeda 5 menit dimulai untuk mencegah Spam.", "warning");
+                    showToast("Sistem Jeda", "Mencapai batas 15 pesan WA. Jeda 5 menit dimulai untuk mencegah terblokir.", "warning");
                     
-                    // Set jeda selama 5 menit (300,000 ms)
+                    // Jeda selama 5 menit (300,000 milidetik)
                     setTimeout(() => {
                         isPaused = false;
                         isProcessingQueue = false;
-                        showToast("Jeda Selesai", "Sistem melanjutkan pengiriman notifikasi WA secara otomatis.", "success");
-                        processWaQueue(); // Lanjutkan antrean
+                        showToast("Jeda Selesai", "Sistem melanjutkan pengiriman notifikasi WA.", "success");
+                        processWaQueue(); 
                     }, 5 * 60 * 1000); 
                     
-                    break; // Keluar dari loop while
+                    break; 
                 }
 
                 const currentTask = waQueue[0];
                 
                 try {
                     await sendWhatsAppMessage(currentTask.phone, currentTask.nama, currentTask.kelas, currentTask.waktu);
-                    waQueue.shift(); // Hapus dari antrean jika berhasil
-                    messageCountSession++; // Tambah counter pesan terkirim
+                    waQueue.shift(); 
+                    messageCountSession++; 
                     updateWaQueueUI();
                     
-                    // Jeda aman antar pesan perorangan (misal: 3 detik)
-                    await new Promise(resolve => setTimeout(resolve, 3000));
+                    // Jeda aman per pesan 2 detik
+                    await new Promise(resolve => setTimeout(resolve, 2000));
                 } catch (error) {
                     console.error("Gagal mengirim WA:", error);
-                    waQueue.shift(); // Tetap keluarkan dari antrean agar tidak macet
+                    waQueue.shift(); // Hindari stuck
                     updateWaQueueUI();
-                    await new Promise(resolve => setTimeout(resolve, 3000));
+                    await new Promise(resolve => setTimeout(resolve, 2000));
                 }
             }
             
@@ -811,13 +783,9 @@
         function addToWaQueue(phone, nama, kelas, waktu, nisn, tanggal) {
             if (!phone || phone.trim() === "") return;
             
-            // Pencegahan Double Entry di Antrean WA
-            // Cek apakah siswa ini di hari yang sama sudah ada di antrean
+            // PENCEGAHAN DOUBLE PESAN UNTUK SISWA YG SAMA DI HARI YG SAMA
             const isAlreadyInQueue = waQueue.some(task => task.nisn === nisn && task.tanggal === tanggal);
-            if (isAlreadyInQueue) {
-                console.log(`Pesan WA untuk ${nama} sudah ada di antrean, dibatalkan.`);
-                return; // Abaikan jika sudah ada
-            }
+            if (isAlreadyInQueue) return; 
 
             waQueue.push({ phone, nama, kelas, waktu, nisn, tanggal });
             updateWaQueueUI();
@@ -831,11 +799,8 @@
             if (!fonnteToken) throw new Error("Token Fonnte kosong");
             
             let targetPhone = phone.toString().trim();
-            if (targetPhone.startsWith('0')) {
-                targetPhone = '62' + targetPhone.substring(1);
-            }
+            if (targetPhone.startsWith('0')) targetPhone = '62' + targetPhone.substring(1);
             
-            // Menggunakan template acak untuk variasi pesan
             let message = getRandomTemplate()
                 .replace(/{nama}/g, nama)
                 .replace(/{kelas}/g, kelas)
@@ -848,7 +813,7 @@
             });
             
             const result = await response.json();
-            if(!result.status) throw new Error(result.reason || "Error dari Fonnte");
+            if(!result.status) throw new Error(result.reason || "Error Fonnte");
             return result;
         }
 
@@ -867,11 +832,11 @@
             
             if (statusText) {
                 if (statusTextOverride) {
-                    statusText.innerHTML = `<span class="text-amber-500 font-bold animate-pulse"><i class="fa-solid fa-clock"></i> ${statusTextOverride} (${waQueue.length} sisa antrean)</span>`;
+                    statusText.innerHTML = `<span class="text-amber-500 font-bold animate-pulse"><i class="fa-solid fa-clock"></i> ${statusTextOverride} (${waQueue.length} sisa)</span>`;
                 } else if (waQueue.length > 0) {
-                    statusText.innerHTML = `<span class="text-blue-600 font-bold"><i class="fa-solid fa-spinner fa-spin"></i> Memproses ${waQueue.length} pesan otomatis...</span>`;
+                    statusText.innerHTML = `<span class="text-blue-600 font-bold"><i class="fa-solid fa-spinner fa-spin"></i> Memproses ${waQueue.length} pesan...</span>`;
                 } else {
-                    statusText.innerHTML = `<span class="text-slate-500"><i class="fa-solid fa-check-double"></i> Antrean Kosong & Aman</span>`;
+                    statusText.innerHTML = `<span class="text-slate-500"><i class="fa-solid fa-check-double"></i> Antrean Kosong</span>`;
                 }
             }
         }
@@ -888,34 +853,51 @@
                 const randomIdx = Math.floor(Math.random() * window.studentsList.length);
                 const p = window.studentsList[randomIdx];
                 if(!p.wa) {
-                    showToast("Error", `Siswa terpilih (${p.nama}) tidak memiliki No WA. Coba lagi.`, "error");
+                    showToast("Error", `Siswa terpilih (${p.nama}) tidak memiliki No WA.`, "error");
                     return;
                 }
                 addToWaQueue(p.wa, p.nama, p.kelas, new Date().toLocaleTimeString('id-ID', {hour: '2-digit', minute: '2-digit'}), p.nisn, "TEST");
-                showToast("Testing...", "Pesan uji coba telah dimasukkan ke dalam antrean (Background).", "success");
+                showToast("Testing...", "Pesan uji coba dimasukkan ke antrean.", "success");
             } else {
-                showToast("Error", "Belum ada data siswa untuk diuji.", "error");
+                showToast("Error", "Belum ada data siswa.", "error");
             }
         }
 
-        // === LOGIKA SCANNER & ABSENSI ===
+        // === GLOBAL SCANNER HARDWARE LISTENER ===
+        let barcodeBuffer = "";
+        let barcodeTimeout;
+        
+        document.addEventListener('keydown', function(e) {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') return;
+            
+            if (e.key === 'Enter') {
+                if (barcodeBuffer.length > 3) {
+                    processScanResult(barcodeBuffer);
+                }
+                barcodeBuffer = "";
+                clearTimeout(barcodeTimeout);
+            } else {
+                if(e.key.length === 1) {
+                    barcodeBuffer += e.key;
+                    clearTimeout(barcodeTimeout);
+                    barcodeTimeout = setTimeout(() => { barcodeBuffer = ""; }, 100); 
+                }
+            }
+        });
+
+        // === LOGIKA KAMERA & ABSENSI ===
         function startScanner() {
             document.getElementById('scanner-placeholder').classList.add('hidden');
             document.getElementById('scan-animation').classList.remove('hidden');
             document.getElementById('btn-start-scan').classList.add('hidden');
             document.getElementById('btn-stop-scan').classList.remove('hidden');
             
-            const indicator = document.getElementById('camera-indicator');
-            indicator.className = "w-2 h-2 rounded-full bg-emerald-500 animate-pulse";
             document.getElementById('camera-status').innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" id="camera-indicator"></span> Aktif';
             
-            // Konfigurasi dioptimalkan untuk scan lebih cepat (fps dinaikkan, format difokuskan jika memungkinkan)
             const config = {
-                fps: 30, // Ditingkatkan untuk respons lebih cepat
+                fps: 30,
                 qrbox: { width: 250, height: 250 },
                 aspectRatio: 1.0,
-                // Uncomment baris di bawah jika HANYA menggunakan QR Code (mempercepat proses decoding)
-                // formatsToSupport: [ Html5QrcodeSupportedFormats.QR_CODE ] 
             };
 
             html5QrcodeScanner = new Html5Qrcode("reader");
@@ -923,10 +905,7 @@
                 { facingMode: "environment" },
                 config,
                 (decodedText) => { processScanResult(decodedText); },
-                (errorMessage) => { 
-                    // Error pembacaan frame wajar terjadi berulang kali sebelum QR terbaca, 
-                    // tidak perlu ditampilkan ke user.
-                }
+                (err) => { }
             ).catch((err) => {
                 showToast("Error Kamera", "Tidak dapat mengakses kamera piranti ini.", "error");
                 stopScanner();
@@ -942,8 +921,6 @@
             document.getElementById('btn-start-scan').classList.remove('hidden');
             document.getElementById('btn-stop-scan').classList.add('hidden');
             document.getElementById('camera-status').innerHTML = '<span class="w-2 h-2 rounded-full bg-slate-400" id="camera-indicator"></span> Standby';
-            
-            // Reset state anti-bounce
             lastScannedNISN = "";
             lastScanTime = 0;
         }
@@ -962,15 +939,11 @@
             nisn = nisn.trim();
             const currentTime = new Date().getTime();
 
-            // 1. PENCEGAHAN DOUBLE SCAN (BOUNCING/SCAN BERULANG CEPAT)
-            // Jika NISN sama dan waktu scan terakhir kurang dari jeda (misal 3 detik), abaikan
+            // 1. PENCEGAHAN BOUNCING SCAN
             if (nisn === lastScannedNISN && (currentTime - lastScanTime) < SCAN_COOLDOWN_MS) {
-                // Sengaja tidak memberikan peringatan visual berlebihan agar tidak spam UI
-                console.log(`Scan berulang untuk NISN ${nisn} diabaikan (Cooldown).`);
-                return; 
+                return;
             }
             
-            // Update waktu dan NISN terakhir scan
             lastScannedNISN = nisn;
             lastScanTime = currentTime;
 
@@ -987,13 +960,11 @@
             const hariId = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
             const hari = hariId[now.getDay()];
             
-            // 2. PENCEGAHAN DOUBLE READING (HARI YANG SAMA)
+            // 2. PENCEGAHAN DOUBLE SCAN DI HARI YANG SAMA
             const alreadyScanned = window.attendanceRecords.some(r => r.nisn === nisn && r.tanggal === tanggal);
             if(alreadyScanned) {
-                // Mainkan suara error
                 playBeep(false);
-                // Berikan peringatan tegas
-                showToast("Peringatan!", `${student.nama} SUDAH MELAKUKAN ABSEN hari ini.`, "warning");
+                showToast("Sudah Absen!", `Peringatan: ${student.nama} sudah absen hari ini!`, "warning");
                 return;
             }
             
@@ -1009,12 +980,11 @@
             localStorage.setItem("smp6_attendance", JSON.stringify(window.attendanceRecords));
             if(typeof window.addRecordToCloud === 'function') window.addRecordToCloud(record);
             
-            // Tampilkan Hasil Scan di UI
+            // Tampilkan Hasil di UI
             const resultCard = document.getElementById('scan-result-card');
             resultCard.classList.remove('hidden');
-            // Re-trigger animation
             resultCard.style.animation = 'none';
-            resultCard.offsetHeight; /* trigger reflow */
+            resultCard.offsetHeight; 
             resultCard.style.animation = null; 
 
             document.getElementById('result-name').innerText = student.nama;
@@ -1029,8 +999,7 @@
             playBeep(true);
             showToast("Berhasil", `Presensi ${student.nama} sukses.`, "success");
             
-            // 3. PENCEGAHAN DOUBLE PESAN WA DILAKUKAN DI DALAM FUNGSI addToWaQueue
-            // Otomatis masukkan ke Antrean Notifikasi WA
+            // 3. MASUKKAN KE ANTREAN WA BACKGROUND
             if(student.wa) {
                 addToWaQueue(student.wa, student.nama, student.kelas, waktu, student.nisn, tanggal);
             }
@@ -1062,7 +1031,6 @@
                     osc.start(ctx.currentTime);
                     osc.stop(ctx.currentTime + 0.1);
                 } else {
-                    // Bunyi peringatan/gagal yang lebih panjang dan kentara
                     osc.type = 'square';
                     osc.frequency.setValueAtTime(300, ctx.currentTime);
                     gainNode.gain.setValueAtTime(0.5, ctx.currentTime);
@@ -1121,8 +1089,8 @@
                         <td class="px-5 py-3 border-b border-slate-100 text-center text-blue-600 font-semibold">${s.kelas}</td>
                         <td class="px-5 py-3 border-b border-slate-100">${s.wa || '-'}</td>
                         <td class="px-5 py-3 border-b border-slate-100 text-center">
-                            <button onclick="editStudent('${s.id}')" class="text-blue-500 hover:text-blue-700 mr-2"><i class="fa-solid fa-pen-to-square"></i></button>
-                            <button onclick="deleteStudent('${s.id}')" class="text-rose-500 hover:text-rose-700"><i class="fa-solid fa-trash"></i></button>
+                            <button onclick="editStudent('${s.id}')" class="text-blue-500 hover:text-blue-700 mr-2 p-1"><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button onclick="deleteStudent('${s.id}')" class="text-rose-500 hover:text-rose-700 p-1"><i class="fa-solid fa-trash"></i></button>
                         </td>
                     </tr>
                 `;
@@ -1132,7 +1100,7 @@
         function renderAllRecords() {
             const filterClass = document.getElementById('record-class-filter')?.value || 'semua';
             const search = (document.getElementById('record-search-input')?.value || '').toLowerCase();
-            const monthPicker = document.getElementById('record-month-picker')?.value; // YYYY-MM
+            const monthPicker = document.getElementById('record-month-picker')?.value; 
             const tbody = document.getElementById('records-table-body');
             
             let filteredRecords = window.attendanceRecords;
@@ -1148,7 +1116,6 @@
                 if (monthPicker) {
                     const [yyyy, mm] = monthPicker.split('-');
                     filteredRecords = filteredRecords.filter(r => {
-                        // tanggal format: DD/MM/YYYY
                         const parts = r.tanggal.split('/');
                         return parts.length === 3 && parts[1] === mm && parts[2] === yyyy;
                     });
@@ -1169,7 +1136,6 @@
                 filteredRecords = filteredRecords.filter(r => r.nama.toLowerCase().includes(search) || r.nisn.includes(search));
             }
 
-            // Update Stats
             document.getElementById('stat-total-records').innerText = filteredRecords.length;
             document.getElementById('stat-total-hadir').innerText = filteredRecords.filter(r=>r.status === 'Hadir').length;
             document.getElementById('stat-total-terlambat').innerText = filteredRecords.filter(r=>r.status === 'Terlambat').length;
@@ -1217,7 +1183,7 @@
             }
         }
 
-        // === MODAL SISWA ===
+        // === MODAL & FUNGSI SISWA ===
         function openAddStudentModal() {
             document.getElementById('form-student-id').value = '';
             document.getElementById('form-nisn').value = '';
@@ -1239,13 +1205,11 @@
             const wa = document.getElementById('form-wa').value;
             
             if(id) {
-                // Edit
                 const idx = window.studentsList.findIndex(s => s.id === id);
                 if(idx > -1) {
                     window.studentsList[idx] = {id, nisn, nama, kelas, wa};
                 }
             } else {
-                // Tambah
                 const student = {id: "S" + new Date().getTime(), nisn, nama, kelas, wa};
                 window.studentsList.push(student);
                 if(typeof window.addStudentToCloud === 'function') window.addStudentToCloud(student);
@@ -1276,7 +1240,139 @@
             }
         }
 
-        // === CETAK QR ===
+        // === FUNGSI EXCEL & ZIP LENGKAP ===
+        function downloadExcelTemplate() {
+            const ws = XLSX.utils.json_to_sheet([{ nisn: "0012345678", nama: "Contoh Siswa", kelas: "7-A", wa: "081234567890" }]);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Template_Siswa");
+            XLSX.writeFile(wb, "Template_Import_Siswa.xlsx");
+            showToast("Sukses", "Template Excel berhasil diunduh.", "success");
+        }
+
+        function importStudentsFromExcel(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, {type: 'array'});
+                const firstSheet = workbook.SheetNames[0];
+                const worksheet = workbook.Sheets[firstSheet];
+                const json = XLSX.utils.sheet_to_json(worksheet);
+                
+                let imported = 0;
+                json.forEach(row => {
+                    const nisnKey = row.nisn || row.NISN;
+                    const namaKey = row.nama || row.Nama;
+                    if(nisnKey && namaKey) {
+                        const exists = window.studentsList.find(s => s.nisn == nisnKey);
+                        if(!exists) {
+                            const newStudent = {
+                                id: "S" + new Date().getTime() + Math.random(),
+                                nisn: String(nisnKey).trim(),
+                                nama: namaKey,
+                                kelas: row.kelas || row.Kelas || "7-A",
+                                wa: row.wa || row.WA || row.WhatsApp ? String(row.wa || row.WA || row.WhatsApp) : ""
+                            };
+                            window.studentsList.push(newStudent);
+                            if(typeof window.addStudentToCloud === 'function') window.addStudentToCloud(newStudent);
+                            imported++;
+                        }
+                    }
+                });
+                localStorage.setItem("smp6_students", JSON.stringify(window.studentsList));
+                renderStudentTable();
+                showToast("Sukses", `${imported} data siswa berhasil ditambahkan.`, "success");
+            };
+            reader.readAsArrayBuffer(file);
+            event.target.value = '';
+        }
+
+        function exportStudentsToExcel() {
+            if(window.studentsList.length === 0) return showToast("Info", "Tidak ada data siswa.", "warning");
+            const wsData = window.studentsList.map(s => ({ NISN: s.nisn, Nama: s.nama, Kelas: s.kelas, WA: s.wa }));
+            const ws = XLSX.utils.json_to_sheet(wsData);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Data_Siswa");
+            XLSX.writeFile(wb, "Data_Induk_Siswa_SMP6.xlsx");
+            showToast("Sukses", "Data siswa diekspor ke Excel.", "success");
+        }
+
+        function exportAttendanceToExcel(filterType) {
+            let filteredRecords = window.attendanceRecords;
+            const now = new Date();
+            const todayStr = now.toLocaleDateString('id-ID');
+            
+            if(filterType === 'today') {
+                filteredRecords = filteredRecords.filter(r => r.tanggal === todayStr);
+            } else if (filterType === 'weekly') {
+                const oneWeekAgo = now.getTime() - (7 * 24 * 60 * 60 * 1000);
+                filteredRecords = filteredRecords.filter(r => r.timestamp >= oneWeekAgo);
+            } else if (filterType === 'monthly') {
+                const currentMonth = (now.getMonth() + 1).toString().padStart(2, '0');
+                const currentYear = now.getFullYear().toString();
+                filteredRecords = filteredRecords.filter(r => {
+                    const parts = r.tanggal.split('/');
+                    return parts.length === 3 && parts[1] === currentMonth && parts[2] === currentYear;
+                });
+            } else if (filterType === 'filtered') {
+                const filterClass = document.getElementById('record-class-filter')?.value || 'semua';
+                if(filterClass !== 'semua') filteredRecords = filteredRecords.filter(r => r.kelas === filterClass);
+            }
+
+            if(filteredRecords.length === 0) return showToast("Info", "Tidak ada data absen untuk diekspor.", "warning");
+
+            const wsData = filteredRecords.map((r, i) => ({ No: i + 1, Hari: r.hari, Tanggal: r.tanggal, Waktu: r.waktu, NISN: r.nisn, Nama: r.nama, Kelas: r.kelas, Status: r.status, WhatsApp: r.wa }));
+            const ws = XLSX.utils.json_to_sheet(wsData);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Laporan_Absensi");
+            XLSX.writeFile(wb, `Laporan_Absensi_${filterType}.xlsx`);
+            showToast("Sukses", `Laporan ${filterType} diekspor ke Excel.`, "success");
+        }
+
+        async function downloadClassQRCodesZip() {
+            const filter = document.getElementById('qr-class-select').value;
+            let listToPrint = window.studentsList;
+            if(filter !== 'semua') listToPrint = listToPrint.filter(s => s.kelas === filter);
+
+            if(listToPrint.length === 0) return showToast("Error", "Tidak ada data siswa untuk didownload.", "error");
+
+            showToast("Info", "Memproses ZIP QR Code...", "success");
+            const zip = new JSZip();
+            
+            const tempDiv = document.createElement('div');
+            tempDiv.style.display = 'none';
+            document.body.appendChild(tempDiv);
+
+            for(let s of listToPrint) {
+                const qrDiv = document.createElement('div');
+                tempDiv.appendChild(qrDiv);
+                
+                new QRCode(qrDiv, { text: s.nisn, width: 250, height: 250, correctLevel : QRCode.CorrectLevel.H });
+                
+                await new Promise(r => setTimeout(r, 50)); 
+                
+                const canvas = qrDiv.querySelector('canvas');
+                if(canvas) {
+                    const dataUrl = canvas.toDataURL('image/png');
+                    const base64Data = dataUrl.replace(/^data:image\/(png|jpg);base64,/, "");
+                    zip.file(`${s.kelas}_${s.nama.replace(/\s/g, '_')}_${s.nisn}.png`, base64Data, {base64: true});
+                }
+            }
+            
+            document.body.removeChild(tempDiv);
+
+            zip.generateAsync({type:"blob"}).then(function(content) {
+                const url = window.URL.createObjectURL(content);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = `QR_Code_${filter === 'semua' ? 'Semua_Kelas' : filter}.zip`;
+                a.click();
+                window.URL.revokeObjectURL(url);
+                showToast("Sukses", "File ZIP QR Code berhasil didownload.", "success");
+            });
+        }
+
         function generateCardsPreview() {
             const container = document.getElementById('print-section');
             if(!container) return;
@@ -1310,20 +1406,6 @@
                     colorDark : "#0f172a", colorLight : "#ffffff", correctLevel : QRCode.CorrectLevel.H
                 });
             });
-        }
-        
-        // Mock function for exporting (since library uses might require specific logic)
-        function exportStudentsToExcel() {
-            showToast("Sukses", "Data siswa diekspor ke Excel.", "success");
-        }
-        function exportAttendanceToExcel(filterType) {
-            showToast("Sukses", `Laporan (${filterType}) diekspor ke Excel.`, "success");
-        }
-        function importStudentsFromExcel(event) {
-            showToast("Sukses", "Data siswa berhasil di-import dari Excel.", "success");
-        }
-        function downloadClassQRCodesZip() {
-            showToast("Info", "Memproses ZIP QR Code kelas terpilih...", "success");
         }
     </script>
 </body>
