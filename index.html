@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Absensi Cerdas SISWA SMP NEGERI 6 MANOKWARI</title>
+    <title>Absensi Cerdas SISWA SMP NEGERI 6 MANOKWARI (WIT)</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome Icons -->
@@ -59,7 +59,6 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Flash Feedback Animations */
         .scan-flash-success { animation: flashSuccess 0.4s ease-out; }
         @keyframes flashSuccess { 0% { background-color: rgba(34, 197, 94, 0.25); } 100% { background-color: transparent; } }
         .scan-flash-late { animation: flashLate 0.4s ease-out; }
@@ -81,7 +80,7 @@
             <h1 class="text-3xl md:text-5xl font-bold mb-3 tracking-tight text-white drop-shadow-md">Selamat Datang</h1>
             <h2 class="text-lg md:text-xl font-medium mb-4 text-cyan-300 drop-shadow-sm">Absensi Cerdas SISWA SMP NEGERI 6 MANOKWARI</h2>
             <p class="mb-8 text-slate-200 text-sm md:text-base leading-relaxed drop-shadow-sm">
-                Sistem Presensi Ultra Cepat Hardware USB Scanner, Sinkronisasi Cloud Firebase Real-Time, Pengaturan Standar WIB (Batas Masuk 07:20 WIB), dan Notifikasi WhatsApp Otomatis Formal & Universal.
+                Sistem Presensi Hardware Scanner USB, Sinkronisasi Cloud Firebase, Zona Waktu WIT (Batas Masuk 07:20 WIT), dan Pesan WhatsApp Formal & Inklusif.
             </p>
             <button onclick="initApp(); closeWelcomeScreen()" class="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-9 py-3.5 rounded-full font-semibold shadow-[0_10px_25px_-5px_rgba(59,130,246,0.6)] hover:shadow-[0_15px_35px_-5px_rgba(59,130,246,0.8)] transition-all transform hover:-translate-y-0.5 active:translate-y-0 border border-white/20">
                 <i class="fa-solid fa-rocket mr-2"></i> Mulai Aplikasi Absensi
@@ -113,8 +112,8 @@
                 <div class="flex items-center gap-3 bg-slate-800/60 p-3 rounded-xl border border-slate-700/60">
                     <div class="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse shadow-[0_0_8px_#22c55e]"></div>
                     <div class="text-xs">
-                        <p class="text-white font-medium">Sistem Aktif (WIB)</p>
-                        <p class="text-[11px] text-cyan-300 font-mono" id="current-datetime">--/--/---- --:--:-- WIB</p>
+                        <p class="text-white font-medium">Sistem Aktif (WIT)</p>
+                        <p class="text-[11px] text-cyan-300 font-mono" id="current-datetime">--/--/---- --:--:-- WIT</p>
                     </div>
                 </div>
             </div>
@@ -128,7 +127,7 @@
                     <h2 id="page-title" class="text-xl font-bold text-slate-800">Pemindai Hardware Scanner Fisik & QR</h2>
                 </div>
                 <div class="flex items-center gap-3">
-                    <span id="scanner-type-indicator" class="text-xs font-medium bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-full flex items-center gap-2 border border-emerald-200 shadow-sm"><i class="fa-solid fa-bolt text-emerald-600 animate-pulse"></i> <span class="hidden sm:inline">Hardware USB Scanner (Respon Super Cepat)</span></span>
+                    <span id="scanner-type-indicator" class="text-xs font-medium bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-full flex items-center gap-2 border border-emerald-200 shadow-sm"><i class="fa-solid fa-bolt text-emerald-600 animate-pulse"></i> <span class="hidden sm:inline">Hardware USB Scanner (Super Fast &lt; 10ms)</span></span>
                     <span id="cloud-status" class="text-xs font-medium bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-full flex items-center gap-2 border border-emerald-200 shadow-sm"><i class="fa-solid fa-cloud-check text-emerald-600"></i> <span class="hidden sm:inline" id="cloud-status-text">Menghubungkan Firebase...</span></span>
                 </div>
             </header>
@@ -147,18 +146,17 @@
                                         <span class="w-3 h-3 rounded-full bg-emerald-500 animate-ping"></span>
                                         <h3 class="font-bold text-slate-800 text-base">Pemindai Scanner Fisik USB</h3>
                                     </div>
-                                    <span class="text-[11px] font-semibold bg-amber-50 text-amber-700 px-2.5 py-1 rounded-full border border-amber-200"><i class="fa-solid fa-clock mr-1"></i>Batas Masuk 07:20 WIB</span>
+                                    <span class="text-[11px] font-semibold bg-amber-50 text-amber-700 px-2.5 py-1 rounded-full border border-amber-200"><i class="fa-solid fa-clock mr-1"></i>Batas 07:20 WIT</span>
                                 </div>
-                                <p class="text-xs text-slate-500 mb-4">Arahkan alat **Scanner Fisik USB** ke barcode / QR siswa. Pemindaian berturut-turut direspon instan. Scan di atas **07:20 WIB** terdeteksi **Terlambat**.</p>
+                                <p class="text-xs text-slate-500 mb-4">Arahkan **Scanner Fisik USB** ke barcode/QR kartu siswa. Di atas 07:20 WIT terdeteksi **Terlambat**.</p>
 
-                                <!-- Hardware Scanner Input Trap -->
                                 <div class="bg-slate-900 rounded-xl p-4 border border-slate-800 text-white mb-4">
                                     <label class="block text-[11px] font-semibold text-cyan-400 uppercase tracking-wider mb-2 flex items-center justify-between">
                                         <span><i class="fa-solid fa-keyboard mr-1.5"></i> Penerima Input Barcode USB:</span>
-                                        <span id="hardware-focus-status" class="text-emerald-400 text-[10px] flex items-center gap-1"><i class="fa-solid fa-circle text-[8px] animate-pulse"></i>Siap Menerima Scan</span>
+                                        <span id="hardware-focus-status" class="text-emerald-400 text-[10px] flex items-center gap-1"><i class="fa-solid fa-circle text-[8px] animate-pulse"></i>Siap Terima Scan</span>
                                     </label>
                                     <div class="flex gap-2">
-                                        <input type="text" id="manual-nisn-input" autocomplete="off" placeholder="Tembak scanner ke kartu atau Ketik NISN..." 
+                                        <input type="text" id="manual-nisn-input" autocomplete="off" placeholder="Tembak scanner ke QR atau Ketik NISN..." 
                                                class="w-full px-4 py-3 bg-slate-800 text-white border border-slate-700 rounded-lg focus:ring-2 focus:ring-cyan-400 focus:outline-none font-mono text-base tracking-wider placeholder-slate-500" 
                                                onkeydown="if(event.key==='Enter'){ handleRapidScan(this.value); this.value=''; }">
                                         <button onclick="const el=document.getElementById('manual-nisn-input'); handleRapidScan(el.value); el.value='';" class="px-5 py-3 bg-cyan-500 text-slate-900 font-bold text-xs rounded-lg hover:bg-cyan-400 transition flex items-center gap-1.5 shrink-0">
@@ -168,7 +166,6 @@
                                 </div>
                             </div>
 
-                            <!-- Camera scanner option -->
                             <div>
                                 <div id="camera-box-wrapper" class="hidden mb-4 relative bg-slate-900 rounded-xl overflow-hidden aspect-video border border-slate-700">
                                     <div id="reader" class="w-full h-full"></div>
@@ -181,28 +178,28 @@
                                         <i class="fa-solid fa-camera-rotate"></i> Matikan Kamera
                                     </button>
                                     <button onclick="simulateScan()" class="px-4 py-2.5 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 rounded-xl font-semibold text-xs transition border border-indigo-200" title="Uji Coba Absen Acak">
-                                        <i class="fa-solid fa-vial"></i> Uji Coba Scan
+                                        <i class="fa-solid fa-vial"></i> Tes Uji
                                     </button>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- LAST SCAN RESULT CARD -->
+                        <!-- INSTANT LAST SCAN RESULT CARD -->
                         <div class="lg:col-span-6 bg-white rounded-2xl p-6 border border-slate-200 shadow-sm premium-shadow flex flex-col justify-between relative overflow-hidden" id="scan-feedback-container">
                             <div class="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-full blur-2xl pointer-events-none"></div>
                             
                             <div>
                                 <div class="flex justify-between items-center mb-4 pb-3 border-b border-slate-100">
                                     <span class="text-xs font-bold uppercase tracking-wider text-slate-400"><i class="fa-solid fa-id-card mr-1.5"></i>Hasil Pemindaian Terakhir</span>
-                                    <span id="scan-timestamp-badge" class="text-xs font-mono bg-slate-100 text-slate-600 px-2.5 py-1 rounded-md">--:--:-- WIB</span>
+                                    <span id="scan-timestamp-badge" class="text-xs font-mono bg-slate-100 text-slate-600 px-2.5 py-1 rounded-md">--:--:-- WIT</span>
                                 </div>
 
                                 <div id="scan-idle-state" class="py-10 text-center text-slate-400">
                                     <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3 text-slate-400 text-2xl">
                                         <i class="fa-solid fa-qrcode"></i>
                                     </div>
-                                    <p class="font-semibold text-sm text-slate-600">Siap Menerima Pemindaian</p>
-                                    <p class="text-xs text-slate-400 mt-1">Tempelkan barcode / QR kartu siswa pada alat scanner USB.</p>
+                                    <p class="font-semibold text-sm text-slate-600">Siap Menerima Scan Hardware</p>
+                                    <p class="text-xs text-slate-400 mt-1">Tempelkan QR / Barcode siswa ke alat scan fisik USB.</p>
                                 </div>
 
                                 <div id="scan-result-card" class="hidden animate-slide-up space-y-4">
@@ -225,7 +222,7 @@
                                             <span id="result-kelas" class="font-bold text-slate-800 text-sm">--</span>
                                         </div>
                                         <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
-                                            <span class="text-slate-400 block text-[10px] uppercase font-semibold">Waktu (WIB)</span>
+                                            <span class="text-slate-400 block text-[10px] uppercase font-semibold">Waktu WIT</span>
                                             <span id="result-time" class="font-bold text-slate-800 text-sm">--</span>
                                         </div>
                                     </div>
@@ -233,8 +230,8 @@
                             </div>
 
                             <div id="scan-wa-status-alert" class="mt-4 pt-3 border-t border-slate-100 text-[11px] text-slate-500 flex items-center justify-between">
-                                <span class="flex items-center gap-1.5"><i class="fa-brands fa-whatsapp text-emerald-500 text-sm"></i> Notifikasi WhatsApp:</span>
-                                <span id="result-wa-text" class="font-semibold text-slate-700">Masuk Antrean Terkirim</span>
+                                <span class="flex items-center gap-1.5"><i class="fa-brands fa-whatsapp text-emerald-500 text-sm"></i> Notifikasi WA Ortu:</span>
+                                <span id="result-wa-text" class="font-semibold text-slate-700">Masuk Antrean WA</span>
                             </div>
                         </div>
                     </div>
@@ -244,9 +241,9 @@
                         <div class="p-5 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-50/50">
                             <div>
                                 <h3 class="font-bold text-slate-800 text-base flex items-center gap-2">
-                                    <i class="fa-solid fa-list-check text-blue-600"></i> Daftar Siswa Absen Hari Ini
+                                    <i class="fa-solid fa-list-check text-blue-600"></i> Daftar Siswa Absen Hari Ini (WIT)
                                 </h3>
-                                <p class="text-xs text-slate-500 mt-0.5">Laporan presensi lengkap siswa yang telah melakukan pemindaian hari ini.</p>
+                                <p class="text-xs text-slate-500 mt-0.5">Laporan presensi lengkap siswa yang melakukan pemindaian hari ini secara real-time.</p>
                             </div>
                             
                             <div class="flex items-center gap-3 w-full sm:w-auto">
@@ -274,7 +271,7 @@
                                 <thead class="sticky top-0 bg-slate-50 text-slate-500 text-xs uppercase tracking-wider border-b border-slate-200 z-10">
                                     <tr>
                                         <th class="px-5 py-3 font-semibold w-12 text-center">No</th>
-                                        <th class="px-5 py-3 font-semibold w-28">Waktu (WIB)</th>
+                                        <th class="px-5 py-3 font-semibold w-28">Waktu (WIT)</th>
                                         <th class="px-5 py-3 font-semibold w-32">NISN</th>
                                         <th class="px-5 py-3 font-semibold">Nama Siswa</th>
                                         <th class="px-5 py-3 font-semibold text-center w-28">Kelas</th>
@@ -295,7 +292,7 @@
                         <div class="p-6 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-50/50">
                             <div class="flex items-center gap-3">
                                 <div class="w-10 h-10 rounded-xl bg-rose-100 flex items-center justify-center text-rose-500"><i class="fa-solid fa-satellite-dish animate-pulse"></i></div>
-                                <div><h2 class="text-lg font-bold text-slate-800">Monitor Live Presensi Real-Time</h2><p class="text-xs text-slate-500">Pemantauan kehadiran siswa hari ini secara otomatis via Firebase Cloud.</p></div>
+                                <div><h2 class="text-lg font-bold text-slate-800">Monitor Live Presensi Real-Time</h2><p class="text-xs text-slate-500">Pemantauan kehadiran siswa hari ini secara otomatis via Cloud Firebase.</p></div>
                             </div>
                             <div class="flex gap-3 w-full sm:w-auto items-center">
                                 <div class="bg-white px-4 py-2 rounded-xl border border-slate-200 shadow-sm text-center flex-1 sm:flex-none">
@@ -306,7 +303,7 @@
                         <div class="p-6">
                             <div class="overflow-x-auto rounded-xl border border-slate-200">
                                 <table class="w-full text-left border-collapse min-w-[650px]">
-                                    <thead><tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider border-b border-slate-200"><th class="px-5 py-3.5 font-semibold w-28">Waktu (WIB)</th><th class="px-5 py-3.5 font-semibold w-32">NISN</th><th class="px-5 py-3.5 font-semibold">Nama Siswa</th><th class="px-5 py-3.5 font-semibold text-center w-28">Kelas</th><th class="px-5 py-3.5 font-semibold text-center w-32">Status</th></tr></thead>
+                                    <thead><tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider border-b border-slate-200"><th class="px-5 py-3.5 font-semibold w-28">Waktu (WIT)</th><th class="px-5 py-3.5 font-semibold w-32">NISN</th><th class="px-5 py-3.5 font-semibold">Nama Siswa</th><th class="px-5 py-3.5 font-semibold text-center w-28">Kelas</th><th class="px-5 py-3.5 font-semibold text-center w-32">Status</th></tr></thead>
                                     <tbody id="live-table-body" class="text-xs md:text-sm divide-y divide-slate-100 bg-white">
                                         <tr id="empty-live"><td colspan="5" class="text-center py-8 text-slate-400">Belum ada siswa absen hari ini.</td></tr>
                                     </tbody>
@@ -322,17 +319,17 @@
                         <div class="p-6 border-b border-slate-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-slate-50/50">
                             <div>
                                 <h2 class="text-lg font-bold text-slate-800">Data Induk Siswa</h2>
-                                <p class="text-xs text-slate-500">Kelola data siswa, NISN, kelas (dapat diisi & diedit manual), dan nomor WhatsApp orang tua.</p>
+                                <p class="text-xs text-slate-500">Kelola informasi data siswa, NISN, kelas (manual/bebas), dan nomor WhatsApp orang tua.</p>
                             </div>
                             <div class="flex flex-wrap gap-2 w-full md:w-auto">
-                                <button onclick="openAddStudentModal()" class="px-3.5 py-2 bg-blue-600 text-white rounded-xl text-xs font-semibold hover:bg-blue-700 transition flex items-center gap-2 shadow-sm"><i class="fa-solid fa-plus"></i> Tambah Siswa</button>
-                                <button onclick="downloadExcelTemplate()" class="px-3.5 py-2 bg-amber-500 text-white rounded-xl text-xs font-semibold hover:bg-amber-600 transition flex items-center gap-2 shadow-sm"><i class="fa-solid fa-file-excel"></i> Template Import</button>
-                                <label class="px-3.5 py-2 bg-emerald-600 text-white rounded-xl text-xs font-semibold hover:bg-emerald-700 transition cursor-pointer flex items-center gap-2 shadow-sm">
+                                <button onclick="openAddStudentModal()" class="px-4 py-2 bg-blue-600 text-white rounded-xl text-xs font-semibold hover:bg-blue-700 transition flex items-center gap-2 shadow-sm"><i class="fa-solid fa-plus"></i> Tambah Siswa</button>
+                                <button onclick="downloadExcelTemplate()" class="px-4 py-2 bg-amber-500 text-white rounded-xl text-xs font-semibold hover:bg-amber-600 transition flex items-center gap-2 shadow-sm"><i class="fa-solid fa-file-excel"></i> Template Import</button>
+                                <label class="px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-semibold hover:bg-emerald-700 transition cursor-pointer flex items-center gap-2 shadow-sm">
                                     <i class="fa-solid fa-upload"></i> Import Excel
                                     <input type="file" id="excel-file-input" accept=".xlsx, .xls" class="hidden" onchange="importStudentsFromExcel(event)">
                                 </label>
-                                <button onclick="exportStudentsToExcel()" class="px-3.5 py-2 bg-slate-700 text-white rounded-xl text-xs font-semibold hover:bg-slate-800 transition flex items-center gap-2 shadow-sm"><i class="fa-solid fa-download"></i> Export Excel</button>
-                                <button onclick="confirmDeleteAllStudents()" class="px-3.5 py-2 bg-rose-600 text-white rounded-xl text-xs font-semibold hover:bg-rose-700 transition flex items-center gap-2 shadow-sm" title="Hapus seluruh data siswa secara permanen"><i class="fa-solid fa-trash-arrow-up"></i> Hapus Semua Data Siswa</button>
+                                <button onclick="exportStudentsToExcel()" class="px-4 py-2 bg-slate-700 text-white rounded-xl text-xs font-semibold hover:bg-slate-800 transition flex items-center gap-2 shadow-sm"><i class="fa-solid fa-download"></i> Export Excel</button>
+                                <button onclick="confirmClearAllStudents()" class="px-4 py-2 bg-rose-600 text-white rounded-xl text-xs font-semibold hover:bg-rose-700 transition flex items-center gap-2 shadow-sm"><i class="fa-solid fa-trash-can"></i> Hapus Semua Data Siswa</button>
                             </div>
                         </div>
                         <div class="p-6">
@@ -344,7 +341,7 @@
                             </div>
                             <div class="overflow-x-auto rounded-xl border border-slate-200">
                                 <table class="w-full text-left border-collapse min-w-[650px]">
-                                    <thead><tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider border-b border-slate-200"><th class="px-5 py-3.5 font-semibold">NISN</th><th class="px-5 py-3.5 font-semibold">Nama Siswa</th><th class="px-5 py-3.5 font-semibold text-center">Kelas</th><th class="px-5 py-3.5 font-semibold">No. WA Orang Tua</th><th class="px-5 py-3.5 font-semibold text-center">Aksi</th></tr></thead>
+                                    <thead><tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider border-b border-slate-200"><th class="px-5 py-3.5 font-semibold">NISN</th><th class="px-5 py-3.5 font-semibold">Nama Siswa</th><th class="px-5 py-3.5 font-semibold text-center">Kelas</th><th class="px-5 py-3.5 font-semibold">No. WhatsApp Orang Tua</th><th class="px-5 py-3.5 font-semibold text-center">Aksi</th></tr></thead>
                                     <tbody id="student-table-body" class="text-xs md:text-sm divide-y divide-slate-100 bg-white"></tbody>
                                 </table>
                             </div>
@@ -358,14 +355,13 @@
                         <div class="p-6 border-b border-slate-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-slate-50/50">
                             <div>
                                 <h2 class="text-lg font-bold text-slate-800">Rekapan Data Absensi Siswa</h2>
-                                <p class="text-xs text-slate-500">Riwayat presensi tersimpan rapi berdasarkan hari & waktu WIB. Data tersimpan permanen kecuali jika dihapus manual.</p>
+                                <p class="text-xs text-slate-500">Laporan dan riwayat presensi harian, mingguan, serta bulanan berbasis waktu WIT Manokwari.</p>
                             </div>
                             <div class="flex flex-wrap gap-2">
-                                <button onclick="confirmClearHistory()" class="px-3.5 py-2 bg-rose-50 text-rose-600 border border-rose-200 rounded-xl text-xs font-semibold hover:bg-rose-100 transition flex items-center gap-1.5"><i class="fa-solid fa-trash"></i> Bersihkan Log Rekapan</button>
+                                <button onclick="confirmClearHistory()" class="px-3.5 py-2 bg-rose-50 text-rose-600 border border-rose-200 rounded-xl text-xs font-semibold hover:bg-rose-100 transition flex items-center gap-1.5"><i class="fa-solid fa-trash"></i> Bersihkan Log Presensi</button>
                             </div>
                         </div>
 
-                        <!-- Panel Tombol Download Excel -->
                         <div class="px-6 pt-5 pb-2 bg-emerald-50/40 border-b border-slate-100">
                             <div class="text-xs font-bold text-emerald-800 mb-2.5 flex items-center gap-2">
                                 <i class="fa-solid fa-file-excel text-emerald-600 text-sm"></i> Download Laporan Excel Rapi:
@@ -407,7 +403,7 @@
                                     <p class="text-2xl font-bold text-emerald-900 mt-1" id="stat-total-hadir">0</p>
                                 </div>
                                 <div class="bg-rose-50/60 border border-rose-200/60 p-4 rounded-xl">
-                                    <p class="text-xs text-rose-600 font-medium uppercase">Total Terlambat (> 07:20 WIB)</p>
+                                    <p class="text-xs text-rose-600 font-medium uppercase">Total Terlambat (&gt; 07:20 WIT)</p>
                                     <p class="text-2xl font-bold text-rose-900 mt-1" id="stat-total-terlambat">0</p>
                                 </div>
                             </div>
@@ -419,7 +415,7 @@
                                             <th class="px-4 py-3.5 font-semibold text-center w-12">No</th>
                                             <th class="px-4 py-3.5 font-semibold">Hari</th>
                                             <th class="px-4 py-3.5 font-semibold">Tanggal</th>
-                                            <th class="px-4 py-3.5 font-semibold">Waktu (WIB)</th>
+                                            <th class="px-4 py-3.5 font-semibold">Waktu (WIT)</th>
                                             <th class="px-4 py-3.5 font-semibold">NISN</th>
                                             <th class="px-4 py-3.5 font-semibold">Nama Siswa</th>
                                             <th class="px-4 py-3.5 font-semibold text-center">Kelas</th>
@@ -443,11 +439,10 @@
                         </div>
                         <div class="p-6 space-y-6">
                             <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-xl text-xs text-emerald-800 space-y-1">
-                                <p class="font-bold"><i class="fa-brands fa-whatsapp text-emerald-600 mr-1.5"></i> Integrasi Otomatis Fonnte Gateway dengan Anti-Spam & Template Formal Universal</p>
-                                <p>Setiap siswa melakukan absensi, sistem memilih secara acak dari format pesan sopan, formal & universal (inklusif untuk seluruh orang tua murid tanpa membedakan agama/kepercayaan). Untuk mencegah pemblokiran, setiap <strong>15 pesan terkirim</strong>, sistem jeda otomatis <strong>5 menit</strong>.</p>
+                                <p class="font-bold"><i class="fa-brands fa-whatsapp text-emerald-600 mr-1.5"></i> Integrasi Otomatis Fonnte Gateway dengan Anti-Spam &amp; Template Formal Inklusif</p>
+                                <p>Setiap siswa melakukan absensi, sistem memilih 1 dari <strong>20 format pesan sopan, formal &amp; universal</strong> (sesuai untuk seluruh orang tua siswa tanpa membedakan latar belakang agama/kepercayaan). Untuk mencegah blokir/spam, setiap <strong>15 pesan terkirim</strong>, sistem beristirahat otomatis <strong>5 menit</strong>.</p>
                             </div>
                             
-                            <!-- Konfigurasi Token Fonnte -->
                             <div class="border border-slate-200 rounded-xl p-5 bg-white">
                                 <h3 class="font-bold text-slate-800 text-sm mb-3">Konfigurasi API Key (Fonnte Token)</h3>
                                 <div class="flex flex-col sm:flex-row gap-3">
@@ -462,7 +457,7 @@
                                 <p class="text-[11px] text-slate-500 mt-2">Dapatkan API Token di <a href="https://md.fonnte.com/new/device.php" target="_blank" class="text-blue-600 hover:underline">dashboard device Fonnte Anda</a>.</p>
                                 
                                 <div id="fonnte-status" class="mt-4 flex items-center gap-2 text-xs font-medium text-emerald-600">
-                                    <i class="fa-solid fa-check-circle"></i> Token API Fonnte Aktif & Siap Digunakan.
+                                    <i class="fa-solid fa-check-circle"></i> Token API Fonnte Aktif &amp; Siap Digunakan.
                                 </div>
 
                                 <div class="mt-5 pt-4 border-t border-slate-100 flex flex-wrap items-center gap-3">
@@ -505,7 +500,7 @@
                     <input type="text" id="form-nama" required placeholder="Contoh: Ahmad Rizky" class="w-full px-3.5 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none">
                 </div>
                 <div>
-                    <label class="block font-medium text-slate-700 mb-1">Kelas (Bisa Ketik Manual / Pilih Dropdown) *</label>
+                    <label class="block font-medium text-slate-700 mb-1">Kelas (Bisa Diketik Manual / Pilih) *</label>
                     <input type="text" id="form-kelas" list="class-options" required placeholder="Ketik manual kelas (misal: 7-A, 8-B, 9-C)..." class="w-full px-3.5 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white">
                     <datalist id="class-options"></datalist>
                 </div>
@@ -527,8 +522,8 @@
             <div class="w-12 h-12 rounded-full bg-rose-100 text-rose-500 flex items-center justify-center mx-auto mb-3 text-xl">
                 <i class="fa-solid fa-triangle-exclamation"></i>
             </div>
-            <h3 class="font-bold text-slate-800 text-base mb-1">Bersihkan Rekapan Absensi?</h3>
-            <p class="text-xs text-slate-500 mb-6">Tindakan ini akan menghapus seluruh data rekapan presensi secara permanen baik di lokal maupun cloud.</p>
+            <h3 class="font-bold text-slate-800 text-base mb-1">Bersihkan Log Absensi?</h3>
+            <p class="text-xs text-slate-500 mb-6">Tindakan ini akan menghapus seluruh data rekapan presensi di perangkat Anda.</p>
             <div class="flex gap-2">
                 <button onclick="closeConfirmModal()" class="flex-1 py-2 bg-slate-100 text-slate-700 rounded-xl text-xs font-semibold hover:bg-slate-200 transition">Batal</button>
                 <button onclick="executeClearHistory()" class="flex-1 py-2 bg-rose-600 text-white rounded-xl text-xs font-semibold hover:bg-rose-700 transition">Ya, Hapus</button>
@@ -536,17 +531,17 @@
         </div>
     </div>
 
-    <!-- MODAL CONFIRMATION DELETE ALL STUDENTS -->
-    <div id="confirm-delete-all-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] flex items-center justify-center hidden p-4">
+    <!-- MODAL CONFIRMATION CLEAR ALL STUDENTS -->
+    <div id="confirm-clear-students-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] flex items-center justify-center hidden p-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 border border-slate-100 text-center animate-slide-up">
-            <div class="w-12 h-12 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center mx-auto mb-3 text-xl">
-                <i class="fa-solid fa-user-slash"></i>
+            <div class="w-12 h-12 rounded-full bg-rose-100 text-rose-500 flex items-center justify-center mx-auto mb-3 text-xl">
+                <i class="fa-solid fa-dumpster-fire"></i>
             </div>
-            <h3 class="font-bold text-slate-800 text-base mb-1">Hapus SEMUA Data Siswa?</h3>
-            <p class="text-xs text-rose-600 font-medium mb-6">Peringatan: Seluruh data siswa akan dihapus SELAMANYA dari aplikasi dan Firebase. Tindakan ini tidak dapat dibatalkan!</p>
+            <h3 class="font-bold text-slate-800 text-base mb-1">Hapus Semua Data Siswa?</h3>
+            <p class="text-xs text-slate-500 mb-6">Tindakan ini akan menghapus seluruh data siswa secara permanen di aplikasi dan di database Firebase!</p>
             <div class="flex gap-2">
-                <button onclick="closeDeleteAllModal()" class="flex-1 py-2 bg-slate-100 text-slate-700 rounded-xl text-xs font-semibold hover:bg-slate-200 transition">Batal</button>
-                <button onclick="executeDeleteAllStudents()" class="flex-1 py-2 bg-rose-700 text-white rounded-xl text-xs font-semibold hover:bg-rose-800 transition">Ya, Hapus Semua</button>
+                <button onclick="closeConfirmClearStudentsModal()" class="flex-1 py-2 bg-slate-100 text-slate-700 rounded-xl text-xs font-semibold hover:bg-slate-200 transition">Batal</button>
+                <button onclick="executeClearAllStudents()" class="flex-1 py-2 bg-rose-600 text-white rounded-xl text-xs font-semibold hover:bg-rose-700 transition">Hapus Selamanya</button>
             </div>
         </div>
     </div>
@@ -557,14 +552,13 @@
         <div class="text-xs"><p id="toast-title" class="font-bold text-white">Notifikasi</p><p id="toast-message" class="text-slate-300">Pesan berhasil.</p></div>
     </div>
 
-    <!-- FIREBASE MODULE & INTEGRATION -->
+    <!-- Firebase Modules & Logic -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, onSnapshot, query, setDoc, doc, deleteDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         
-        // NEW FIREBASE CONFIGURATION PROVIDED BY USER
-        const firebaseConfig = { 
+        let firebaseConfig = { 
             apiKey: "AIzaSyAnJ0R2s01s1VQQp_JMHCYeek7o7eCZd6o",
             authDomain: "absen-cerdas-664d4.firebaseapp.com",
             projectId: "absen-cerdas-664d4",
@@ -573,15 +567,15 @@
             appId: "1:969268339722:web:1585d5042982d2a968abf3",
             measurementId: "G-2WRC47YNYC"
         };
-        const appId = 'smp6_manokwari';
+        const appId = 'absen-cerdas-664d4';
 
         let app, auth;
         try {
             app = initializeApp(firebaseConfig);
             window.firebaseDB = getFirestore(app);
             auth = getAuth(app);
-            signInAnonymously(auth).catch(e => console.log("Auth info:", e));
-        } catch(e) { console.log("Firebase init error:", e); }
+            signInAnonymously(auth).catch(e => console.log("Auth note:", e));
+        } catch(e) { console.log("Firebase init note:", e); }
         
         let isLocalMode = false;
         function setLocalMode() {
@@ -591,97 +585,102 @@
             const cloudStatusText = document.getElementById("cloud-status-text");
             const cloudStatusEl = document.getElementById("cloud-status");
             if (cloudStatusText && cloudStatusEl) {
-                cloudStatusText.innerText = "Mode Offline (Lokal)"; 
+                cloudStatusText.innerText = "Mode Lokal (Offline)"; 
                 cloudStatusEl.className = "text-xs font-medium bg-slate-100 text-slate-700 px-3 py-1.5 rounded-full flex items-center gap-2 border border-slate-300 shadow-sm transition-all";
                 cloudStatusEl.querySelector('i').className = "fa-solid fa-hard-drive text-slate-500";
             }
         }
 
         window.addRecordToCloud = async (record) => {
-            if (!auth || !auth.currentUser || isLocalMode) return;
+            if (!auth || isLocalMode) return;
             try { 
-                await setDoc(doc(window.firebaseDB, 'smp6_attendance', record.id), record); 
+                await addDoc(collection(window.firebaseDB, 'attendance'), record); 
             } catch (e) { console.error("Error upload attendance:", e); }
         };
 
         window.addStudentToCloud = async (student) => {
-            if (!auth || !auth.currentUser || isLocalMode) return;
+            if (!auth || isLocalMode) return;
             try { 
-                await setDoc(doc(window.firebaseDB, 'smp6_students', student.id), student); 
+                await setDoc(doc(window.firebaseDB, 'students', student.id), student); 
             } catch (e) { console.error("Error upload student:", e); }
         };
 
         window.deleteStudentFromCloud = async (studentId) => {
-            if (!auth || !auth.currentUser || isLocalMode) return;
+            if (!auth || isLocalMode) return;
             try {
-                await deleteDoc(doc(window.firebaseDB, 'smp6_students', studentId));
+                await deleteDoc(doc(window.firebaseDB, 'students', studentId));
             } catch(e) { console.error("Error delete student:", e); }
         };
 
-        window.clearAllStudentsFromCloud = async () => {
-            if (!auth || !auth.currentUser || isLocalMode) return;
+        window.deleteAllStudentsFromCloud = async () => {
+            if (!auth || isLocalMode) return;
             try {
-                const snapshot = await getDocs(collection(window.firebaseDB, 'smp6_students'));
-                const promises = snapshot.docs.map(d => deleteDoc(d.ref));
-                await Promise.all(promises);
-            } catch(e) { console.error("Error clear all students:", e); }
+                const querySnapshot = await getDocs(collection(window.firebaseDB, 'students'));
+                querySnapshot.forEach(async (documentSnap) => {
+                    await deleteDoc(doc(window.firebaseDB, 'students', documentSnap.id));
+                });
+            } catch(e) { console.error("Error delete all students:", e); }
         };
 
-        window.clearAllAttendanceFromCloud = async () => {
-            if (!auth || !auth.currentUser || isLocalMode) return;
-            try {
-                const snapshot = await getDocs(collection(window.firebaseDB, 'smp6_attendance'));
-                const promises = snapshot.docs.map(d => deleteDoc(d.ref));
-                await Promise.all(promises);
-            } catch(e) { console.error("Error clear attendance history:", e); }
-        };
-
-        // Real-Time Firebase Synchronizer
         function startRealtimeSync() {
             if (!window.firebaseDB || isLocalMode) return;
 
             const cloudStatusText = document.getElementById("cloud-status-text");
             const cloudStatusEl = document.getElementById("cloud-status");
             if (cloudStatusText && cloudStatusEl) {
-                cloudStatusText.innerText = "Firebase Terhubung";
+                cloudStatusText.innerText = "Firebase Terhubung (Ultra Fast)";
                 cloudStatusEl.className = "text-xs font-medium bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-full flex items-center gap-2 border border-emerald-200 shadow-sm";
             }
 
             try {
                 // Synchronize Students Collection
-                const qStudents = query(collection(window.firebaseDB, 'smp6_students'));
+                const qStudents = query(collection(window.firebaseDB, 'students'));
                 onSnapshot(qStudents, (snapshot) => {
-                    let updatedList = [];
-                    snapshot.forEach((docSnap) => {
-                        updatedList.push(docSnap.data());
-                    });
-                    
-                    if (snapshot.docChanges().length > 0 || updatedList.length !== window.studentsList.length) {
-                        if (updatedList.length > 0 || snapshot.metadata.hasPendingWrites) {
-                            window.studentsList = updatedList;
-                            localStorage.setItem("smp6_students", JSON.stringify(window.studentsList));
-                            window.rebuildStudentLookupMap();
-                            if(typeof window.updateClassDropdowns === 'function') window.updateClassDropdowns();
-                            if(typeof window.renderStudentTable === 'function') window.renderStudentTable();
+                    let hasChanges = false;
+                    snapshot.docChanges().forEach((change) => {
+                        const data = change.doc.data();
+                        if (change.type === "added" || change.type === "modified") {
+                            const idx = window.studentsList.findIndex(s => s.id === data.id || (s.nisn && s.nisn === data.nisn));
+                            if (idx > -1) {
+                                window.studentsList[idx] = { ...window.studentsList[idx], ...data };
+                            } else {
+                                window.studentsList.push(data);
+                            }
+                            hasChanges = true;
+                        } else if (change.type === "removed") {
+                            window.studentsList = window.studentsList.filter(s => s.id !== data.id);
+                            hasChanges = true;
                         }
+                    });
+                    if (hasChanges) {
+                        localStorage.setItem("smp6_students", JSON.stringify(window.studentsList));
+                        window.rebuildStudentLookupMap();
+                        if(typeof window.updateClassDropdowns === 'function') window.updateClassDropdowns();
+                        if(typeof window.renderStudentTable === 'function') window.renderStudentTable();
                     }
                 }, (error) => setLocalMode());
 
                 // Synchronize Attendance Collection
-                const qAttendance = query(collection(window.firebaseDB, 'smp6_attendance'));
+                const qAttendance = query(collection(window.firebaseDB, 'attendance'));
                 onSnapshot(qAttendance, (snapshot) => {
-                    let updatedAttendance = [];
-                    snapshot.forEach((docSnap) => {
-                        updatedAttendance.push(docSnap.data());
+                    let hasNew = false;
+                    snapshot.docChanges().forEach((change) => {
+                        const data = change.doc.data();
+                        if (change.type === "added") {
+                            const exists = window.attendanceRecords.some(r => r.id === data.id);
+                            if (!exists) {
+                                window.attendanceRecords.unshift(data);
+                                hasNew = true;
+                            }
+                        }
                     });
-                    
-                    updatedAttendance.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-                    window.attendanceRecords = updatedAttendance;
-                    localStorage.setItem("smp6_attendance", JSON.stringify(window.attendanceRecords));
-                    
-                    if(typeof window.renderLiveTable === 'function') window.renderLiveTable();
-                    if(typeof window.renderTodayScanTable === 'function') window.renderTodayScanTable();
-                    if(typeof window.renderAllRecords === 'function') window.renderAllRecords();
+                    if (hasNew) {
+                        window.attendanceRecords.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+                        localStorage.setItem("smp6_attendance", JSON.stringify(window.attendanceRecords));
+                        if(typeof window.renderLiveTable === 'function') window.renderLiveTable();
+                        if(typeof window.renderTodayScanTable === 'function') window.renderTodayScanTable();
+                        if(typeof window.renderAllRecords === 'function') window.renderAllRecords();
+                    }
                 }, (error) => setLocalMode());
 
             } catch(e) {
@@ -693,25 +692,25 @@
     </script>
 
     <script>
-        // WIB TIME HELPER FUNCTIONS (Waktu Indonesia Barat - UTC+7)
-        function getWIBDate() {
+        // TIME HELPER FOR WIT (Waktu Indonesia Timur - UTC+9, Manokwari Papua Barat)
+        function getWITDate() {
             const now = new Date();
             const utcTime = now.getTime() + (now.getTimezoneOffset() * 60000);
-            return new Date(utcTime + (3600000 * 7)); // Add 7 hours for WIB
+            return new Date(utcTime + (3600000 * 9)); // Add 9 hours for WIT
         }
 
-        function getWIBDateString(dObj = getWIBDate()) {
+        function getWITDateString(dObj = getWITDate()) {
             return dObj.toISOString().split('T')[0];
         }
 
-        function getWIBTimeString(dObj = getWIBDate()) {
+        function getWITTimeString(dObj = getWITDate()) {
             const h = String(dObj.getHours()).padStart(2, '0');
             const m = String(dObj.getMinutes()).padStart(2, '0');
             const s = String(dObj.getSeconds()).padStart(2, '0');
             return `${h}:${m}:${s}`;
         }
 
-        // DATA INITIALIZATION & FAST LOOKUP MAP O(1)
+        // INITIALIZE DATA & ULTRA-FAST LOOKUP MAP
         window.studentsList = JSON.parse(localStorage.getItem("smp6_students")) || [
             { id: '1', nisn: '0081234501', nama: 'Ahmad Rizky Pratama', kelas: '7-A', wa: '081234567890' },
             { id: '2', nisn: '0081234502', nama: 'Anisa Putri Maharani', kelas: '7-A', wa: '081234567891' },
@@ -736,30 +735,30 @@
         let waSentCount = parseInt(localStorage.getItem("smp6_wa_sent_count")) || 0;
         let html5QrcodeScanner = null;
         let activeRecordFilter = 'semua';
-        let lastScanCooldownMap = new Map(); // Anti double scan per NISN dalam 3 detik
+        let lastScanCooldownMap = new Map();
 
-        // FORMAL, RESPECTFUL & INCLUSIVE WA TEMPLATES (20 VARIASI FORMAL ANTI-SPAM SEMUA AGAMA)
+        // 20 FORMAL, POLITE & INCLUSIVE WA TEMPLATES FOR ALL FAITHS
         const waTemplates = [
-            "Yth. Bapak/Ibu Orang Tua/Wali dari {nama} (Kelas {kelas}), kami menginformasikan bahwa putra/putri Anda telah hadir di SMP Negeri 6 Manokwari pada pukul {waktu} WIB ({status}). Semoga kegiatan belajar berjalan lancar.",
-            "Pemberitahuan Presensi SMPN 6 Manokwari: Ananda {nama} ({kelas}) telah mencatatkan kehadiran di sekolah pada pukul {waktu} WIB dengan status: {status}. Terima kasih atas perhatian Bapak/Ibu.",
-            "Informasi Kehadiran SMPN 6: Ananda {nama} kelas {kelas} terdata hadir di sekolah pada pukul {waktu} WIB ({status}). Semoga senantiasa diberikan kesehatan dan semangat belajar.",
-            "Laporan Kehadiran Siswa: Ananda {nama} ({kelas}) telah tiba di SMP Negeri 6 Manokwari pada pukul {waktu} WIB ({status}). Salam hormat kami dari bapak/ibu guru.",
-            "Kepada Yth. Orang Tua/Wali dari {nama} ({kelas}), kami sampaikan bahwa ananda telah hadir di sekolah pada pukul {waktu} WIB ({status}). Selamat beraktivitas.",
-            "Selamat pagi/siang Bapak/Ibu Wali Murid, ananda {nama} dari kelas {kelas} telah terdaftar hadir di sekolah pukul {waktu} WIB ({status}). Mari bersama mendampingi putra-putri kita.",
-            "Pemberitahuan Resmi SMP Negeri 6 Manokwari: Ananda {nama} ({kelas}) telah berada di area sekolah pada pukul {waktu} WIB ({status}). Terima kasih atas kerjasamanya.",
-            "Kepada Yth. Bapak/Ibu Wali {nama}, ananda kelas {kelas} terdata hadir di SMPN 6 Manokwari pukul {waktu} WIB ({status}). Semoga harinya menyenangkan.",
-            "Pesan Otomatis Presensi: Siswa/i {nama} ({kelas}) telah melakukan presensi pada pukul {waktu} WIB ({status}). Doa kami selalu untuk kesuksesan ananda.",
-            "Informasi Presensi SMPN 6 Manokwari: Ananda {nama} ({kelas}) telah tiba di sekolah pada pukul {waktu} WIB ({status}). Terima kasih atas kedisiplinannya.",
-            "Laporan Presensi Harian: Ananda {nama} ({kelas}) telah mencatatkan presensi pada pukul {waktu} WIB ({status}). Selamat menuntut ilmu untuk ananda.",
-            "Yth. Orang Tua/Wali {nama} ({kelas}), putra/putri Anda telah tiba di SMPN 6 Manokwari pada pukul {waktu} WIB ({status}). Semoga kegiatan pembelajaran hari ini sukses.",
-            "Info Presensi Sekolah: Ananda {nama} kelas {kelas} hadir di sekolah pada pukul {waktu} WIB ({status}). Salam sukses untuk keluarga Bapak/Ibu.",
-            "Laporan Kehadiran SMPN 6: Ananda {nama} ({kelas}) terdaftar hadir pada pukul {waktu} WIB ({status}) di SMPN 6 Manokwari. Terima kasih atas dukungannya.",
-            "Pemberitahuan Kehadiran: Siswa atas nama {nama} ({kelas}) telah berada di sekolah pukul {waktu} WIB ({status}). Salam hormat dari pihak sekolah.",
-            "Yth. Bapak/Ibu Wali Murid, ananda {nama} ({kelas}) telah melakukan presensi di SMPN 6 Manokwari pada pukul {waktu} WIB ({status}).",
-            "Presensi Terdaftar: Ananda {nama} kelas {kelas} telah melakukan scan hadir pada pukul {waktu} WIB ({status}). Semoga ilmunya bermanfaat.",
-            "Info Presensi Harian: Kami menginformasikan bahwa {nama} ({kelas}) telah tiba di SMP Negeri 6 Manokwari pada pukul {waktu} WIB ({status}). Selamat beraktivitas.",
-            "Pemberitahuan Siswa: Ananda {nama} ({kelas}) telah hadir di sekolah pukul {waktu} WIB ({status}). Terima kasih atas perhatian Bapak/Ibu Wali.",
-            "Kabar Kehadiran SMPN 6 Manokwari: Ananda {nama} ({kelas}) telah tiba dengan selamat di sekolah pukul {waktu} WIB ({status})."
+            "Yth. Bapak/Ibu Orang Tua/Wali dari {nama} (Kelas {kelas}), kami menginformasikan bahwa putra/putri Anda telah hadir di SMP Negeri 6 Manokwari pada pukul {waktu} WIT ({status}). Semoga kegiatan belajar mengajar berjalan lancar.",
+            "Pemberitahuan Presensi SMPN 6 Manokwari: Ananda {nama} ({kelas}) telah mencatatkan kehadiran di sekolah pada pukul {waktu} WIT dengan status: {status}. Terima kasih atas perhatian Bapak/Ibu.",
+            "Informasi Kehadiran SMPN 6: Ananda {nama} kelas {kelas} terdata hadir di sekolah pada pukul {waktu} WIT ({status}). Semoga senantiasa diberikan kesehatan dan semangat belajar.",
+            "Laporan Kehadiran Siswa: Ananda {nama} ({kelas}) telah tiba di SMP Negeri 6 Manokwari pada pukul {waktu} WIT ({status}). Salam hormat kami dari pimpinan dan bapak/ibu guru.",
+            "Kepada Yth. Orang Tua/Wali dari {nama} ({kelas}), kami sampaikan bahwa ananda telah hadir di sekolah pada pukul {waktu} WIT ({status}). Selamat beraktivitas.",
+            "Selamat pagi/siang Bapak/Ibu Wali Murid, ananda {nama} dari kelas {kelas} telah terdaftar hadir di sekolah pukul {waktu} WIT ({status}). Mari bersama mendampingi putra-putri kita menuju prestasi.",
+            "Pemberitahuan Resmi SMP Negeri 6 Manokwari: Ananda {nama} ({kelas}) telah berada di area sekolah pada pukul {waktu} WIT ({status}). Terima kasih atas kerjasamanya.",
+            "Kepada Yth. Bapak/Ibu Wali {nama}, ananda kelas {kelas} terdata hadir di SMPN 6 Manokwari pukul {waktu} WIT ({status}). Semoga harinya menyenangkan.",
+            "Pesan Otomatis Presensi: Siswa/i {nama} ({kelas}) telah melakukan presensi pada pukul {waktu} WIT ({status}). Doa kami selalu untuk kesuksesan ananda.",
+            "Informasi Presensi SMPN 6 Manokwari: Ananda {nama} ({kelas}) telah tiba di sekolah pada pukul {waktu} WIT ({status}). Terima kasih atas kedisiplinannya.",
+            "Laporan Presensi Harian: Ananda {nama} ({kelas}) telah mencatatkan presensi pada pukul {waktu} WIT ({status}). Selamat menuntut ilmu untuk ananda.",
+            "Yth. Orang Tua/Wali {nama} ({kelas}), putra/putri Anda telah tiba di SMPN 6 Manokwari pada pukul {waktu} WIT ({status}). Semoga kegiatan pembelajaran hari ini sukses.",
+            "Info Presensi Sekolah: Ananda {nama} kelas {kelas} hadir di sekolah pada pukul {waktu} WIT ({status}). Salam sukses untuk keluarga Bapak/Ibu.",
+            "Laporan Kehadiran SMPN 6: Ananda {nama} ({kelas}) terdaftar hadir pada pukul {waktu} WIT ({status}) di SMPN 6 Manokwari. Terima kasih atas dukungannya.",
+            "Pemberitahuan Kehadiran: Siswa atas nama {nama} ({kelas}) telah berada di sekolah pukul {waktu} WIT ({status}). Salam hormat dari pihak sekolah.",
+            "Yth. Bapak/Ibu Wali Murid, ananda {nama} ({kelas}) telah melakukan presensi di SMPN 6 Manokwari pada pukul {waktu} WIT ({status}).",
+            "Presensi Terdaftar: Ananda {nama} kelas {kelas} telah melakukan scan hadir pada pukul {waktu} WIT ({status}). Semoga ilmunya bermanfaat.",
+            "Info Presensi Harian: Kami menginformasikan bahwa {nama} ({kelas}) telah tiba di SMP Negeri 6 Manokwari pada pukul {waktu} WIT ({status}). Selamat beraktivitas.",
+            "Pemberitahuan Siswa: Ananda {nama} ({kelas}) telah hadir di sekolah pukul {waktu} WIT ({status}). Terima kasih atas perhatian Bapak/Ibu Wali.",
+            "Kabar Kehadiran SMPN 6 Manokwari: Ananda {nama} ({kelas}) telah tiba dengan selamat di sekolah pukul {waktu} WIT ({status})."
         ];
 
         function initApp() {
@@ -853,14 +852,13 @@
         }
 
         function updateClock() {
-            const wib = getWIBDate();
-            const dateStr = wib.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' });
-            const timeStr = getWIBTimeString(wib);
+            const wit = getWITDate();
+            const dateStr = wit.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            const timeStr = getWITTimeString(wit);
             const el = document.getElementById("current-datetime");
-            if (el) el.innerText = `${dateStr} ${timeStr} WIB`;
+            if (el) el.innerText = `${dateStr} ${timeStr} WIT`;
         }
 
-        // BEEP AUDIO SYNTHESIZER
         function playSound(type = 'success') {
             try {
                 const AudioCtx = window.AudioContext || window.webkitAudioContext;
@@ -896,7 +894,7 @@
             } catch(e) {}
         }
 
-        // HARDWARE SCANNER RAPID LOGIC (LATENESS CUTOFF: > 07:20 WIB)
+        // HARDWARE SCANNER RAPID LOGIC (WIT TIMEZONE & 07:20 THRESHOLD)
         function handleRapidScan(nisnRaw) {
             if (!nisnRaw) return;
             const nisn = String(nisnRaw).trim();
@@ -912,17 +910,16 @@
                 }
             }
 
-            const wibObj = getWIBDate();
-            const dateStr = getWIBDateString(wibObj);
-            const timeStr = getWIBTimeString(wibObj);
+            const witObj = getWITDate();
+            const dateStr = getWITDateString(witObj);
+            const timeStr = getWITTimeString(witObj);
 
-            // LATENESS RULE: > 07:20 WIB is Terlambat
-            const hours = wibObj.getHours();
-            const minutes = wibObj.getMinutes();
+            // LATENESS DETECTOR: > 07:20 WIT is Terlambat
+            const hours = witObj.getHours();
+            const minutes = witObj.getMinutes();
             const isLate = (hours > 7 || (hours === 7 && minutes > 20));
             const statusStr = isLate ? 'Terlambat' : 'Hadir';
 
-            // Instant Map Lookup O(1)
             const student = window.studentLookupMap.get(nisn);
 
             if (!student) {
@@ -932,14 +929,13 @@
                     nama: 'Data Siswa Belum Terdaftar',
                     nisn: nisn,
                     kelas: '-',
-                    time: `${timeStr} WIB`,
+                    time: `${timeStr} WIT`,
                     status: 'Tidak Ditemukan',
                     isError: true
                 });
                 return;
             }
 
-            // Check if student already scanned today
             const alreadyScanned = window.attendanceRecords.some(r => r.nisn === nisn && r.tanggal === dateStr);
             if (alreadyScanned) {
                 showToast("Sudah Absen", `${student.nama} sudah melakukan presensi hari ini.`, "warning");
@@ -948,7 +944,7 @@
                     nama: student.nama,
                     nisn: student.nisn,
                     kelas: student.kelas,
-                    time: `${timeStr} WIB`,
+                    time: `${timeStr} WIT`,
                     status: 'Sudah Absen Hari Ini',
                     isWarning: true
                 });
@@ -956,36 +952,31 @@
                 return;
             }
 
-            // Create record
             const newRecord = {
                 id: 'att_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6),
                 nisn: student.nisn,
                 nama: student.nama,
                 kelas: student.kelas,
                 tanggal: dateStr,
-                waktu: `${timeStr} WIB`,
+                waktu: `${timeStr} WIT`,
                 status: statusStr,
                 wa: student.wa || '-',
                 timestamp: Date.now()
             };
 
-            // Save locally
             window.attendanceRecords.unshift(newRecord);
             localStorage.setItem("smp6_attendance", JSON.stringify(window.attendanceRecords));
             lastScanCooldownMap.set(nisn, nowTs);
 
-            // Cloud sync
             if (window.addRecordToCloud) window.addRecordToCloud(newRecord);
 
-            // Queue WA Message
             if (student.wa && student.wa.length >= 9) {
-                queueWhatsAppNotification(student, `${timeStr} WIB`, statusStr);
+                queueWhatsAppNotification(student, `${timeStr} WIT`, statusStr);
             }
 
-            // Sound & UI Flash Feedback
             if (isLate) {
                 playSound('late');
-                showToast("Presensi Terlambat", `${student.nama} (${student.kelas}) - Terlambat (> 07:20 WIB)`, "warning");
+                showToast("Presensi Terlambat", `${student.nama} (${student.kelas}) - Terlambat (> 07:20 WIT)`, "warning");
             } else {
                 playSound('success');
                 showToast("Absen Berhasil!", `${student.nama} (${student.kelas}) - Hadir Tepat Waktu`, "success");
@@ -995,7 +986,7 @@
                 nama: student.nama,
                 nisn: student.nisn,
                 kelas: student.kelas,
-                time: `${timeStr} WIB`,
+                time: `${timeStr} WIT`,
                 status: statusStr,
                 isLate: isLate
             });
@@ -1037,7 +1028,7 @@
                     badge.innerText = "Sudah Absen Hari Ini";
                 } else if (data.isLate) {
                     badge.className = "inline-block px-3 py-0.5 rounded-full text-[11px] font-bold uppercase bg-rose-100 text-rose-800 mb-1";
-                    badge.innerText = "Terlambat (> 07:20 WIB)";
+                    badge.innerText = "Terlambat (> 07:20 WIT)";
                     if(container) {
                         container.classList.add('scan-flash-late');
                         setTimeout(() => container.classList.remove('scan-flash-late'), 400);
@@ -1062,7 +1053,6 @@
             handleRapidScan(randomStudent.nisn);
         }
 
-        // CAMERA SCANNER FUNCTIONALITY
         function startScanner() {
             const cameraWrapper = document.getElementById("camera-box-wrapper");
             if (cameraWrapper) cameraWrapper.classList.remove("hidden");
@@ -1088,7 +1078,7 @@
                         showToast("Kamera Error", "Gagal mengaktifkan kamera.", "error");
                     });
                 } else {
-                    showToast("Tidak Ada Kamera", "Perangkat tidak memiliki kamera.", "warning");
+                    showToast("Tidak Ada Kamera", "Perangkat tidak memiliki kamera terdeteksi.", "warning");
                 }
             }).catch(err => showToast("Akses Ditolak", "Izin kamera ditolak.", "error"));
         }
@@ -1105,12 +1095,11 @@
             }
         }
 
-        // RENDER TODAY SCAN TABLE (IN SCAN TAB)
         function renderTodayScanTable() {
             const tbody = document.getElementById("today-scan-table-body");
             if (!tbody) return;
 
-            const todayStr = getWIBDateString();
+            const todayStr = getWITDateString();
             const searchVal = (document.getElementById("today-scan-search")?.value || "").toLowerCase();
             const classFilter = document.getElementById("today-scan-class-filter")?.value || "semua";
 
@@ -1142,19 +1131,18 @@
                     <td class="px-5 py-3 text-center"><span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">${r.kelas}</span></td>
                     <td class="px-5 py-3 text-center">
                         <span class="px-3 py-1 rounded-full text-xs font-bold ${r.status === 'Hadir' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">
-                            ${r.status === 'Hadir' ? 'Hadir Tepat Waktu' : 'Terlambat (>07:20 WIB)'}
+                            ${r.status === 'Hadir' ? 'Hadir Tepat Waktu' : 'Terlambat (>07:20 WIT)'}
                         </span>
                     </td>
                 </tr>
             `).join('');
         }
 
-        // RENDER LIVE TAB TABLE
         function renderLiveTable() {
             const tbody = document.getElementById("live-table-body");
             if (!tbody) return;
 
-            const todayStr = getWIBDateString();
+            const todayStr = getWITDateString();
             const todayRecords = window.attendanceRecords.filter(r => r.tanggal === todayStr);
 
             document.getElementById("live-total-today").innerText = todayRecords.length;
@@ -1175,7 +1163,6 @@
             `).join('');
         }
 
-        // RENDER DATA SISWA TABLE
         function renderStudentTable() {
             const tbody = document.getElementById("student-table-body");
             if (!tbody) return;
@@ -1210,7 +1197,6 @@
             `).join('');
         }
 
-        // RENDER REKAPAN ABSEN TABLE
         function setRecordFilter(filter) {
             activeRecordFilter = filter;
             ['semua', 'today', 'weekly', 'monthly'].forEach(f => {
@@ -1234,15 +1220,15 @@
             const classFilter = document.getElementById("record-class-filter")?.value || "semua";
             const monthPicker = document.getElementById("record-month-picker")?.value;
 
-            const wibObj = getWIBDate();
-            const todayStr = getWIBDateString(wibObj);
+            const witObj = getWITDate();
+            const todayStr = getWITDateString(witObj);
 
             let records = [...window.attendanceRecords];
 
             if (activeRecordFilter === 'today') {
                 records = records.filter(r => r.tanggal === todayStr);
             } else if (activeRecordFilter === 'weekly') {
-                const sevenDaysAgo = new Date(wibObj.getTime() - (7 * 24 * 60 * 60 * 1000));
+                const sevenDaysAgo = new Date(witObj.getTime() - (7 * 24 * 60 * 60 * 1000));
                 records = records.filter(r => new Date(r.tanggal) >= sevenDaysAgo);
             } else if (activeRecordFilter === 'monthly') {
                 const targetMonth = monthPicker || todayStr.substring(0, 7);
@@ -1282,7 +1268,6 @@
             }).join('');
         }
 
-        // DYNAMIC CLASS DROPDOWNS & DATALIST
         function updateClassDropdowns() {
             const classesSet = new Set(['7-A', '7-B', '7-C', '7-D', '8-A', '8-B', '8-C', '9-A', '9-B', '9-C']);
             window.studentsList.forEach(s => {
@@ -1311,7 +1296,6 @@
             }
         }
 
-        // STUDENT DATA MANAGEMENT (ADD / EDIT / DELETE / DELETE ALL)
         function openAddStudentModal() {
             document.getElementById("modal-title").innerText = "Tambah Siswa Baru";
             document.getElementById("form-student-id").value = "";
@@ -1396,33 +1380,33 @@
 
             updateClassDropdowns();
             renderStudentTable();
-            showToast("Siswa Dihapus", `Data ${student.nama} dihapus selamanya.`, "success");
+            showToast("Siswa Dihapus", `Data ${student.nama} berhasil dihapus.`, "success");
         }
 
-        function confirmDeleteAllStudents() {
-            const modal = document.getElementById("confirm-delete-all-modal");
+        // CLEAR ALL STUDENTS FUNCTIONALITY
+        function confirmClearAllStudents() {
+            const modal = document.getElementById("confirm-clear-students-modal");
             if (modal) modal.classList.remove("hidden");
         }
 
-        function closeDeleteAllModal() {
-            const modal = document.getElementById("confirm-delete-all-modal");
+        function closeConfirmClearStudentsModal() {
+            const modal = document.getElementById("confirm-clear-students-modal");
             if (modal) modal.classList.add("hidden");
         }
 
-        function executeDeleteAllStudents() {
+        function executeClearAllStudents() {
             window.studentsList = [];
             localStorage.setItem("smp6_students", JSON.stringify([]));
             window.rebuildStudentLookupMap();
-
-            if (window.clearAllStudentsFromCloud) window.clearAllStudentsFromCloud();
+            
+            if (window.deleteAllStudentsFromCloud) window.deleteAllStudentsFromCloud();
 
             updateClassDropdowns();
             renderStudentTable();
-            closeDeleteAllModal();
-            showToast("Semua Siswa Dihapus", "Seluruh data siswa telah dihapus selamanya dari aplikasi dan Firebase.", "success");
+            closeConfirmClearStudentsModal();
+            showToast("Seluruh Data Siswa Dihapus", "Semua data siswa berhasil dihapus secara permanen.", "success");
         }
 
-        // EXCEL IMPORT & EXPORT
         function downloadExcelTemplate() {
             const data = [
                 ["NISN", "Nama Siswa", "Kelas", "No. WA Ortu"],
@@ -1480,7 +1464,7 @@
                     showToast("Import Gagal", "File Excel tidak sesuai format.", "error");
                 }
             };
-            reader.readAsArrayBuffer(file);
+            reader.readAsBuffer(file);
             e.target.value = "";
         }
 
@@ -1498,14 +1482,14 @@
         }
 
         function exportAttendanceToExcel(mode) {
-            const todayStr = getWIBDateString();
+            const todayStr = getWITDateString();
             let records = [...window.attendanceRecords];
 
             if (mode === 'today') {
                 records = records.filter(r => r.tanggal === todayStr);
             } else if (mode === 'weekly') {
-                const wibObj = getWIBDate();
-                const sevenDaysAgo = new Date(wibObj.getTime() - (7 * 24 * 60 * 60 * 1000));
+                const witObj = getWITDate();
+                const sevenDaysAgo = new Date(witObj.getTime() - (7 * 24 * 60 * 60 * 1000));
                 records = records.filter(r => new Date(r.tanggal) >= sevenDaysAgo);
             } else if (mode === 'monthly') {
                 const targetMonth = document.getElementById("record-month-picker")?.value || todayStr.substring(0, 7);
@@ -1529,7 +1513,7 @@
                 "No": i + 1,
                 "Hari": new Date(r.tanggal).toLocaleDateString('id-ID', { weekday: 'long' }),
                 "Tanggal": r.tanggal,
-                "Waktu (WIB)": r.waktu,
+                "Waktu (WIT)": r.waktu,
                 "NISN": r.nisn,
                 "Nama Siswa": r.nama,
                 "Kelas": r.kelas,
@@ -1556,16 +1540,14 @@
         function executeClearHistory() {
             window.attendanceRecords = [];
             localStorage.setItem("smp6_attendance", JSON.stringify([]));
-            if (window.clearAllAttendanceFromCloud) window.clearAllAttendanceFromCloud();
-
             renderTodayScanTable();
             renderLiveTable();
             renderAllRecords();
             closeConfirmModal();
-            showToast("Log Dibersihkan", "Seluruh riwayat presensi telah dihapus selamanya.", "success");
+            showToast("Log Dibersihkan", "Seluruh riwayat presensi telah dihapus.", "success");
         }
 
-        // WHATSAPP ENGINE (FONNTE INTEGRATION)
+        // WHATSAPP FONNTE NOTIFICATION SYSTEM
         function saveFonnteToken() {
             const token = document.getElementById("fonnte-token-input")?.value.trim();
             if (!token) {
@@ -1613,94 +1595,80 @@
 
             if (statusText) {
                 if (waQueue.length > 0) {
-                    statusText.innerHTML = `<span class="text-amber-600 font-bold"><i class="fa-solid fa-spinner animate-spin"></i> Mengirim ${waQueue.length} Pesan Antrean...</span>`;
+                    statusText.innerHTML = `<span class="text-amber-600 font-bold"><i class="fa-solid fa-spinner animate-spin"></i> Mengirim ${waQueue.length} Pesan Terantre</span>`;
                 } else {
-                    statusText.innerHTML = `<span class="text-slate-500"><i class="fa-solid fa-check-double text-emerald-500"></i> Antrean Kosong / Terkirim</span>`;
+                    statusText.innerHTML = `<span class="text-slate-500"><i class="fa-solid fa-check-double"></i> Antrean Kosong</span>`;
                 }
             }
         }
 
-        let isSendingWA = false;
+        let isProcessingWA = false;
         async function processWAQueue() {
-            if (isSendingWA || waQueue.length === 0 || !fonnteToken) return;
+            if (isProcessingWA || waQueue.length === 0 || !fonnteToken) return;
+            isProcessingWA = true;
 
-            // Anti-Spam: Rest 5 minutes every 15 messages sent
             if (waSentCount >= 15) {
                 const statusText = document.getElementById("wa-queue-status-text");
-                if (statusText) {
-                    statusText.innerHTML = `<span class="text-amber-600 font-bold"><i class="fa-solid fa-clock-rotate-left"></i> Jeda Anti-Spam (15 pesan terkirim). Menunggu 5 menit...</span>`;
-                }
+                if (statusText) statusText.innerHTML = `<span class="text-amber-600 font-semibold"><i class="fa-solid fa-pause"></i> Anti-Spam Istirahat 5 Menit...</span>`;
                 setTimeout(() => {
                     waSentCount = 0;
-                    localStorage.setItem("smp6_wa_sent_count", 0);
+                    localStorage.setItem("smp6_wa_sent_count", "0");
+                    isProcessingWA = false;
                     processWAQueue();
-                }, 300000); // 5 minutes break
+                }, 5 * 60 * 1000); // 5 Minutes Rest
                 return;
             }
 
-            isSendingWA = true;
-            const currentItem = waQueue.shift();
+            const current = waQueue.shift();
             localStorage.setItem("smp6_wa_queue", JSON.stringify(waQueue));
             updateWAQueueUI();
 
             try {
-                const response = await fetch("https://api.fonnte.com/send", {
-                    method: "POST",
-                    headers: {
-                        "Authorization": fonnteToken,
-                        "Content-Type": "application/x-www-form-urlencoded"
-                    },
-                    body: new URLSearchParams({
-                        target: currentItem.target,
-                        message: currentItem.message
-                    })
+                const formData = new FormData();
+                formData.append('target', current.target);
+                formData.append('message', current.message);
+
+                await fetch('https://api.fonnte.com/send', {
+                    method: 'POST',
+                    headers: { 'Authorization': fonnteToken },
+                    body: formData
                 });
 
-                const resData = await response.json();
-                if (resData.status) {
-                    waSentCount++;
-                    localStorage.setItem("smp6_wa_sent_count", waSentCount);
-                    const waResultText = document.getElementById("result-wa-text");
-                    if (waResultText) waResultText.innerText = `Pesan Terkirim Ke (${currentItem.studentName})`;
-                }
-            } catch (e) {
+                waSentCount++;
+                localStorage.setItem("smp6_wa_sent_count", waSentCount.toString());
+                const resWaText = document.getElementById("result-wa-text");
+                if (resWaText) resWaText.innerText = "Terkirim Ke Ortu " + current.studentName;
+            } catch(e) {
                 console.error("WA Send Error:", e);
             }
 
-            isSendingWA = false;
+            isProcessingWA = false;
             if (waQueue.length > 0) {
-                setTimeout(processWAQueue, 2500); // 2.5 second delay between messages
-            } else {
-                updateWAQueueUI();
+                setTimeout(processWAQueue, 1500); // 1.5 second delay per message
             }
         }
 
         function testFonnteConnection() {
-            if (!fonnteToken) {
-                showToast("Token Belum Ada", "Silakan masukkan Token Fonnte terlebih dahulu.", "warning");
+            if (!window.studentsList || window.studentsList.length === 0) {
+                showToast("Data Kosong", "Masukkan data siswa terlebih dahulu.", "warning");
                 return;
             }
-            if (window.studentsList.length === 0) {
-                showToast("Data Siswa Kosong", "Tambahkan siswa minimal 1 untuk tes.", "warning");
-                return;
-            }
-            const sample = window.studentsList[Math.floor(Math.random() * window.studentsList.length)];
-            const wibObj = getWIBDate();
-            queueWhatsAppNotification(sample, `${getWIBTimeString(wibObj)} WIB`, "Hadir Tepat Waktu (Tes)");
-            showToast("Tes Dikirim", `Pesan tes masuk antrean untuk ${sample.nama}`, "success");
+            const randomStudent = window.studentsList[Math.floor(Math.random() * window.studentsList.length)];
+            queueWhatsAppNotification(randomStudent, `${getWITTimeString()} WIT`, "Hadir Tepat Waktu");
+            showToast("Tes WA Diantrekan", `Uji coba pesan WA dikirim ke no: ${randomStudent.wa || 'Siswa'}`, "success");
         }
 
-        // TOAST DISPLAY HELPER
+        // TOAST DISPLAY SYSTEM
         function showToast(title, message, type = 'success') {
             const toast = document.getElementById("toast");
             const toastTitle = document.getElementById("toast-title");
-            const toastMsg = document.getElementById("toast-message");
+            const toastMessage = document.getElementById("toast-message");
             const toastIcon = document.getElementById("toast-icon");
 
-            if (!toast || !toastTitle || !toastMsg) return;
+            if (!toast) return;
 
             toastTitle.innerText = title;
-            toastMsg.innerText = message;
+            toastMessage.innerText = message;
 
             if (type === 'success') {
                 toastIcon.className = "fa-solid fa-circle-check text-emerald-400 text-lg";
@@ -1716,10 +1684,41 @@
             }, 3000);
         }
 
-        // AUTO START APPLICATION ON LOAD
-        window.addEventListener("DOMContentLoaded", () => {
+        window.initApp = initApp;
+        window.closeWelcomeScreen = closeWelcomeScreen;
+        window.toggleSidebar = toggleSidebar;
+        window.switchTab = switchTab;
+        window.handleRapidScan = handleRapidScan;
+        window.simulateScan = simulateScan;
+        window.startScanner = startScanner;
+        window.stopScanner = stopScanner;
+        window.renderTodayScanTable = renderTodayScanTable;
+        window.renderLiveTable = renderLiveTable;
+        window.renderStudentTable = renderStudentTable;
+        window.renderAllRecords = renderAllRecords;
+        window.setRecordFilter = setRecordFilter;
+        window.openAddStudentModal = openAddStudentModal;
+        window.closeAddStudentModal = closeAddStudentModal;
+        window.editStudent = editStudent;
+        window.saveStudentForm = saveStudentForm;
+        window.deleteStudent = deleteStudent;
+        window.confirmClearAllStudents = confirmClearAllStudents;
+        window.closeConfirmClearStudentsModal = closeConfirmClearStudentsModal;
+        window.executeClearAllStudents = executeClearAllStudents;
+        window.downloadExcelTemplate = downloadExcelTemplate;
+        window.importStudentsFromExcel = importStudentsFromExcel;
+        window.exportStudentsToExcel = exportStudentsToExcel;
+        window.exportAttendanceToExcel = exportAttendanceToExcel;
+        window.confirmClearHistory = confirmClearHistory;
+        window.closeConfirmModal = closeConfirmModal;
+        window.executeClearHistory = executeClearHistory;
+        window.saveFonnteToken = saveFonnteToken;
+        window.testFonnteConnection = testFonnteConnection;
+        window.showToast = showToast;
+
+        window.onload = function() {
             initApp();
-        });
+        };
     </script>
 </body>
 </html>
